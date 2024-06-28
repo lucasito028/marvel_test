@@ -1,11 +1,11 @@
 import { React, useState } from 'react'
-import CardHq from './Services/CardHq.jsx'
+import Home from './Pages/Home'
 
 function App() {
 
   return (
     <>
-        <CardHq/>
+        <Home/>
     </>
   )
 }

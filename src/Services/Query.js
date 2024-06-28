@@ -33,16 +33,3 @@ export class Query {
         return data.data.results;
     }
 }
-
-/*
-// Uso da classe Query fora de um componente React
-const fetchComics = async () => {
-    const queryInstance = new Query({ limit: 10, title: 'Spider-Man'  });
-    try {
-        const comics = await queryInstance.select();
-        console.log(comics);
-    } catch (error) {
-        console.error('Error fetching comics:', error);
-    }
-};
-*/
