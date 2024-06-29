@@ -1,12 +1,15 @@
-export class Query {
+export class Api  {
 
-    constructor(query = { id: null}) {
+    constructor(table, query = { id: null}) {
+        this.table = table
         this.query = query;
+        this.publicKey = 'e053145fd0982715b5cdb1bb9e5fe0c2';
+        this.hash = '5d30905a04649c736f3cdf33c95b81db';
     }
 
     buildUrl() {
         
-        let url = `https://gateway.marvel.com/v1/public/comics`;
+        let url = `https://gateway.marvel.com/v1/public/${this.table}`;
 
         const {id} = this.query;
 
@@ -18,9 +21,9 @@ export class Query {
             //console.log(id);
             //console.log(this.query);
             
-            url += `/${id}?ts=1&apikey=e053145fd0982715b5cdb1bb9e5fe0c2&hash=5d30905a04649c736f3cdf33c95b81db`;
+            url += `/${id}?ts=1&apikey=${this.publicKey}&hash=${this.hash}`;
         } else {
-            url += `?`;
+            url += `?noVariants=true&formatType=comic&`;
 
             for (const [key, type] of Object.entries(this.query)) {
                 if (type) {
