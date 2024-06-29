@@ -5,10 +5,10 @@ import { useNavigate } from "react-router-dom";
 export default function Home({ searchParams }) {
   const navigate = useNavigate();
   const [comics, setComics] = useState([]);
-  const {limit, title} = searchParams
+  const {limitParam, titleParam} = searchParams
 
   const fetchComics = async () => {
-    const queryInstance = new Api('comics', { limit: limit, title: title });
+    const queryInstance = new Api('comics', { limit: limitParam, title: titleParam });
     try {
       setComics(await queryInstance.select());
     } catch (error) {
@@ -24,7 +24,7 @@ export default function Home({ searchParams }) {
 
   useEffect(() => {
     fetchComics();
-  }, [limit, title]);
+  }, [limitParam, titleParam]);
 
   const handleComic = (id) => {
     navigate(`/comics/${id}`);

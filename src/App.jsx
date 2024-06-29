@@ -6,7 +6,7 @@ import AboutComics from './Components/AboutComics';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
-  const [search, setSearch] = useState({ title: '', limit: 15 });
+  const [search, setSearch] = useState({ titleParam: '', limitParam: 15 });
 
   const handleSearch = (params) => {
     setSearch(params);

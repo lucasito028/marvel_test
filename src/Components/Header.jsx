@@ -1,19 +1,19 @@
 import { useState } from 'react';
 
 export default function Header({ onSearch }) {
-  const [title, setTitle] = useState('');
-  const [limit, setLimit] = useState(15);
+  const [titleParam, setTitleParam] = useState('');
+  const [limitParam, setLimitParam] = useState(15);
 
   const handleChangeTitle = (e) => {
-    setTitle(e.target.value);
+    setTitleParam(e.target.value);
   };
   const handleChangeLimit = (e) => {
-    setLimit(e.target.value);
+    setLimitParam(e.target.value);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSearch({title, limit});
+    onSearch({titleParam, limitParam});
   };
 
   return (
@@ -23,13 +23,13 @@ export default function Header({ onSearch }) {
         <input
           type="text"
           placeholder="Search comics"
-          value={title}
+          value={titleParam}
           onChange={handleChangeTitle}
         />
         <input
           type="number"
           placeholder="Limit of Comics"
-          value={limit}
+          value={limitParam}
           onChange={handleChangeLimit}
         />
         <button type="submit">Search</button>
