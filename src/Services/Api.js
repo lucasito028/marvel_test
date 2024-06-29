@@ -1,6 +1,6 @@
 export class Api  {
 
-    constructor(table, query = { id: null}) {
+    constructor(table, query = { id: null,}) {
         this.table = table
         this.query = query;
         this.publicKey = 'e053145fd0982715b5cdb1bb9e5fe0c2';

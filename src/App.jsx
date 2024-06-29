@@ -24,7 +24,7 @@ function App() {
           <Route path="/comics/:id" element={<AboutComics />} />
         </Routes>
       </Router>
-      
+
       <Footer />
     </>
   );

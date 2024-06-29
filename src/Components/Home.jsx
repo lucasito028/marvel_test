@@ -8,7 +8,7 @@ export default function Home({ searchParams }) {
   const {limitParam, titleParam} = searchParams
 
   const fetchComics = async () => {
-    const queryInstance = new Api('comics', { limit: limitParam, title: titleParam });
+    const queryInstance = new Api('comics', { limit: limitParam, title: titleParam});
     try {
       setComics(await queryInstance.select());
     } catch (error) {
