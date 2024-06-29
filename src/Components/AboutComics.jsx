@@ -6,16 +6,31 @@ export default function AboutComics() {
   
   const navigate = new useNavigate()
   const [comic, setComic] = useState(null);
+  const [errorMessage, setErrorMessage] = useState()
   const {id} = useParams(); 
 
   const fetchComic = async () => {
-    if(!id) return;
+    if(!id) return
     const queryInstance = new Api('comics', {id});
     try {
       setComic(await queryInstance.select())
-      setComic(data.length > 0 ? data[0] : null)
+      if(data.length > 0){
+        setComic(data[0])
+        setErrorMessage("")
+      }else{
+        setComic(null)
+        setErrorMessage("Comic Não existe")
+        setTimeout(() => {
+          navigate("/")
+        }, 3000)
+      }
     } catch (error) {
       console.log(error);
+      setComic(null)
+      setErrorMessage("Erro ao Buscar a Comic")
+      setTimeout(() => {
+        navigate("/")
+      }, 3000)
     }
   };
 
@@ -37,6 +52,8 @@ export default function AboutComics() {
   return (
     <>
         <button onClick={() => backToHome()}>Voltar para Pagina Principal</button>
+        {errorMessage && <div>{errorMessage}</div>}
+        
         {comic && comic.map((comic) => (
           <div key={comic.id}>
             <ul>

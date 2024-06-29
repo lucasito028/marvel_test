@@ -15,12 +15,16 @@ function App() {
   return (
     <>
       <Header onSearch={handleSearch} />
+      {/**
+       * Body Part
+       */}
       <Router>
         <Routes>
           <Route path="/" element={<Home searchParams={search} />} />
           <Route path="/comics/:id" element={<AboutComics />} />
         </Routes>
       </Router>
+      
       <Footer />
     </>
   );
