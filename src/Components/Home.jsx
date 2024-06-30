@@ -5,12 +5,15 @@ import { useNavigate } from "react-router-dom";
 export default function Home({ searchParams }) {
   const navigate = useNavigate();
   const [comics, setComics] = useState([]);
-  const {limitParam, titleParam} = searchParams
+  const {limitParam, titleParam, dateParam, characterParamId} = searchParams
 
   const fetchComics = async () => {
-    const queryInstance = new Api('comics', { limit: limitParam, title: titleParam});
+    const queryInstance = new Api(['comics'], { dateRange: dateParam, limit: limitParam, 
+       title: titleParam, characters: characterParamId});
+
     try {
-      setComics(await queryInstance.select());
+      const results = await queryInstance.select();
+      setComics(results || []);
     } catch (error) {
       console.log(error);
     }
@@ -24,7 +27,7 @@ export default function Home({ searchParams }) {
 
   useEffect(() => {
     fetchComics();
-  }, [limitParam, titleParam]);
+  }, [dateParam, limitParam, titleParam, characterParamId]);
 
   const handleComic = (id) => {
     navigate(`/comics/${id}`);

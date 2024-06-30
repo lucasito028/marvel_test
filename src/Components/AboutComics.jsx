@@ -11,7 +11,7 @@ export default function AboutComics() {
 
   const fetchComic = async () => {
     if(!id) return;
-    const queryInstance = new Api('comics', {id});
+    const queryInstance = new Api(['comics'], {id});
     try {
       const data = await queryInstance.select();
       if(data.length > 0){
