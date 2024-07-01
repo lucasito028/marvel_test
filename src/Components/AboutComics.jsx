@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Api } from "../Services/Api";
 import { useNavigate, useParams } from "react-router-dom";
+import { Api } from "../Services/Api";
 
 export default function AboutComics() {
   
@@ -14,8 +14,8 @@ export default function AboutComics() {
     const queryInstance = new Api(['comics'], {id});
     try {
       const data = await queryInstance.select();
-      if(data.length > 0){
-        setComic(data[0])
+      if(data.results.length > 0){
+        setComic(data.results[0])
         setErrorMessage("")
       }else{
         setComic(null)
@@ -50,43 +50,59 @@ export default function AboutComics() {
   }, [id]);
 
   return (
-    <>
-        <button onClick={() => backToHome()}>Voltar para Pagina Principal</button>
+    <main>
+      <div>
+        <button onClick={() => backToHome()}>
+          Voltar para Pagina Principal
+        </button>
         {errorMessage && <div>{errorMessage}</div>}
+      </div>
         {comic && (
           <div key={comic.id}>
-            <ul>
-              <li>{comic.id}</li>
-              <img src={comic.thumbnail.path+"."+comic.thumbnail.extension} />
-              <li>{comic.title}</li>
-              <li>{comic.pageCount}</li>
-              <li>{toConvertData(comic.dates[1].date)}</li>
-              <li>{comic.description}</li>
-              <h2>Authors</h2>
-              {comic.creators.items && comic.creators.items.map((item, index) => (
-                <li key={`${comic.id}-creator-${index}`}>
-                  {item.name} Function: {item.role}
-                </li>
-              ))}
-
-              {comic.characters.items && comic.characters.items.length > 0 && (
-              <>
-                <h2>Herois</h2>
-                {comic.characters.items.map((item, index) => (
-                  <li key={`${comic.id}-character-${index}`}>
-                    {item.name}
-                  </li>
-                ))}
-              </>
-            )}
-            </ul>
-            <br/>
-            <br/>
+              <div>
+                <img 
+                  src={comic.thumbnail.path+"."+comic.thumbnail.extension} 
+                  height= "500px"
+                  width= "auto"
+                  />
+              </div>  
+              <div>
+                <div> {comic.title}{/*comic.id*/}</div>
+                <div>
+                  <div>
+                    Publicado em: {toConvertData(comic.dates[1].date)}<br></br>
+                    Quantidade de Paginas {comic.pageCount}
+                  </div>
+                  <div>
+                    <div>
+                      <p>Autores</p>
+                      {comic.creators.items && comic.creators.items.map((item, index) => (
+                        <li key={`${comic.id}-creator-${index}`}>
+                          {item.role}: {item.name} 
+                        </li>
+                      ))}
+                    </div>
+                    <div>
+                      {comic.characters.items && comic.characters.items.length > 0 && (
+                        <>
+                          <p>Herois</p>
+                          {comic.characters.items.map((item, index) => (
+                            <li key={`${comic.id}-character-${index}`}>
+                              {item.name}
+                            </li>
+                          ))}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  {comic.description}
+                </div>
+            </div>
           </div>
         )}
-
-        {/*<pre>{JSON.stringify(comic, null, 2)}</pre>*/}
-        
-    </>
+      {/*<pre>{JSON.stringify(comic, null, 2)}</pre>*/}     
+  </main>
   );
 }

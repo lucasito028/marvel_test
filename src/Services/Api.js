@@ -30,7 +30,7 @@ export class Api  {
             url += `?`
 
             for (const [key, type] of Object.entries(this.query)) {
-                if (type != null && type !== '' && type != 0) {
+                if (Boolean(type)) {
                     if(type.length === 2){
                         if(type[0] > type[1]){
                                 //console.log("Trocando Valores")
@@ -53,8 +53,8 @@ export class Api  {
             }
             //url += `ts=1&apikey=${this.publicKey}&hash=${this.hash}`;
         }
-        //console.log(url)
         url += `ts=1&apikey=${this.publicKey}&hash=${this.hash}`;
+        console.log(url)
         return url;
     }
 
@@ -65,7 +65,7 @@ export class Api  {
             const data = await response.json();
             if(data && data.data && data.data.results){
                 //console.log(data.data)
-                return data.data.results;
+                return data.data;
             }else {
                 throw new Error('API não responde');
             }
