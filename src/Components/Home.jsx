@@ -5,17 +5,30 @@ import { useNavigate } from "react-router-dom";
 export default function Home({ searchParams }) {
   const navigate = useNavigate();
   const [comics, setComics] = useState([]);
-  const {limitParam, titleParam, dateParam, characterParamId} = searchParams
+  //
+  const {limitParam, 
+        titleParam, 
+        dateParam,
+        characterParamId} = searchParams;
 
   const fetchComics = async () => {
-    const queryInstance = new Api(['comics'], { dateRange: dateParam, limit: limitParam, 
-       title: titleParam, characters: characterParamId});
+
+    const queryInstance = new Api(['comics'], { 
+      formatType: "comic",
+      noVariants: true,
+      dateRange: dateParam,  
+      title: titleParam, 
+      characters: characterParamId,
+      limit: parseInt(limitParam, 10) || 20,
+    });
+    
+    //console.log(queryInstance.query)
 
     try {
       const results = await queryInstance.select();
       setComics(results || []);
     } catch (error) {
-      console.log(error);
+      //console.log(error);
     }
   };
 
@@ -27,7 +40,11 @@ export default function Home({ searchParams }) {
 
   useEffect(() => {
     fetchComics();
-  }, [dateParam, limitParam, titleParam, characterParamId]);
+  }, [dateParam, 
+      titleParam,
+      characterParamId,
+      limitParam
+    ]);
 
   const handleComic = (id) => {
     navigate(`/comics/${id}`);
@@ -35,7 +52,6 @@ export default function Home({ searchParams }) {
 
   return (
     <>
-
       <div>
         <p>{comics.length}</p>
         {comics.map((comic) => (
@@ -48,13 +64,14 @@ export default function Home({ searchParams }) {
               />
               <li>{comic.title}</li>
               <li>{comic.pageCount}</li>
-              <li>{toConvertData(comic.dates[1].date)}</li>
+              <li>{toConvertData(comic.dates[0].date)}</li>
             </ul>
             <br />
             <br />
           </div>
         ))}
       </div>
+      {/**/}
     </>
   );
 }

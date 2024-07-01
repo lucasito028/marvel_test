@@ -1,25 +1,20 @@
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { Api } from '../Services/Api';
 
 export default function Header({ onSearch }) {
   
   const navigate = new useNavigate()
   const [titleParam, setTitleParam] = useState('');
-  const [characterParamId, setCharacterParamId] = useState(0);
-  const [characterName, setCharacterName] = useState(0);
-  const [limitParam, setLimitParam] = useState(15);
-  const [dateParam, setDateParam] = useState([null, null]);
+  //const [characterParamId, setCharacterParamId] = useState(0);
+  //const [characterName, setCharacterName] = useState('');
+  const [limitParam, setLimitParam] = useState(20);
+  const [dateParam, setDateParam] = useState([new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().split('T')[0], 
+      new Date().toISOString().split('T')[0]]);
 
-  const savedSearch = () =>{
-    const saved = JSON.parse(localStorage.getItem('searchParams'))
-    return saved || {titleParam: '', limitParam: 15, dateParam: [null, null]}
-  }
-
+  /*
   const getCharacterId = async () => {
-
-    console.log(characterName)
-    const queryInstance = new Api(['characters'], {name: characterName});
+    //console.log(characterName)
+    const queryInstance = new Api(['characters'], {name: characterName, limit: 1});
     try {
       const results = await queryInstance.select();
       //console.log(results[0].id)
@@ -27,18 +22,19 @@ export default function Header({ onSearch }) {
     } catch (error) {
       console.log(error);
     }
-
   };
+  */
+
   
   const handleChangeTitle = (e) => {
     setTitleParam(e.target.value);
   };
   const handleChangeLimit = (e) => {
-    setLimitParam(e.target.value);
+    parseInt(setLimitParam(e.target.value));
   };
-  const handleChangeCharacter = (e) => {
+  /* const handleChangeCharacter = (e) => {
     setCharacterName(e.target.value);
-  };
+  };*/
   const handleChangeDate = (index, e) => {
     const newDateParam = [...dateParam];
     newDateParam[index] = e.target.value;
@@ -47,11 +43,11 @@ export default function Header({ onSearch }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    getCharacterId();
-    console.log(characterParamId)
-    const searchParams = { titleParam, limitParam, dateParam, characterParamId }
+    //getCharacterId();
+    //console.log(limitParam)
+    //console.log(characterParamId)
+    const searchParams = { titleParam, limitParam, dateParam }
     onSearch(searchParams);
-    localStorage.setItem('searchParams', JSON.stringify(searchParams))
     navigate("/")
   };
 
@@ -67,12 +63,13 @@ export default function Header({ onSearch }) {
           onChange={handleChangeTitle}
         />
 
+        {/*
         <input
           type="text"
           placeholder="Search By Character"
           value={characterName}
           onChange={handleChangeCharacter}
-        />
+        />*/}
 
         <input
           type="number"

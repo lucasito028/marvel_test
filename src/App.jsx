@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Header from './Components/Header';
 import Home from './Components/Home';
 import Footer from './Components/Footer';
@@ -7,26 +7,20 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
 
-  const savedSearch = () =>{
-    const saved = JSON.parse(localStorage.getItem('searchParams'))
-    return saved || {titleParam: '', limitParam: 15, dateParam: [null, null], characterParamId: null}
-  }
-  
-  const [search, setSearch] = useState({ titleParam: '', limitParam: 15, 
-    dateParam:  ['2024-01-01', '2024-06-28'] , characterParamId: null});
+  const [search, setSearch] = useState({ 
+    titleParam: '', 
+    limitParam: 20, 
+    dateParam:  [new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().split('T')[0], 
+    new Date().toISOString().split('T')[0]] , 
+    characterParamId: ''
+  });
 
   const handleSearch = (params) => {
     setSearch(params);
   };
-  useEffect(()=>{
-    setSearch(savedSearch());
-  }, [])
 
   return (
     <>
-      {/**
-       * Body Part
-       */}
       <Router>
       <Header onSearch={handleSearch} />
         <Routes>
