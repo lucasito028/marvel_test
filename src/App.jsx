@@ -18,8 +18,8 @@ function App() {
   });
 
   const handleSearch = (params) => {
-    console.log("2 - ")
-    console.log(params)
+    //console.log("2 - ")
+    //console.log(params)
     setSearch(params);
   };
 

@@ -17,7 +17,7 @@ export default function Header({ onSearch }) {
   };
 
   const handleChangeLimit = (e) => {
-    setLimitParam(parseInt(e.target.value) || 20);
+    setLimitParam(parseInt(e.target.value));
   };
 
   const handleChangeCharacter = (e) => {

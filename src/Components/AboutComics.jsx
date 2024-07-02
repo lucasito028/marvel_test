@@ -1,110 +1,124 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Api } from "../Services/Api";
+import {
+  Main,
+  HeaderMain,
+  BodyMain,
+  AboutComic,
+  ImgComic,
+  ContainerInformation,
+  AlignInformation,
+  H2,
+  H3,
+  H4,
+  BasicFont,
+  Button
+} from "./../assets/aboutComics";
 
 export default function AboutComics() {
   const navigate = useNavigate();
+  const { id } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [comic, setComic] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
-  const { id } = useParams();
 
-  const fetchComic = async () => {
-    setIsLoading(true); 
-    const queryInstance = new Api(['comics'], { id });
-    try {
-      const data = await queryInstance.select();
-      if (data.results.length > 0) {
-        setComic(data.results[0]);
-        setErrorMessage(null);
-        setIsLoading(false); 
-      } else {
+  useEffect(() => {
+    const fetchComic = async () => {
+      setIsLoading(true);
+      const queryInstance = new Api(["comics"], { id });
+      try {
+        const data = await queryInstance.select();
+        if (data.results.length > 0) {
+          setComic(data.results[0]);
+          setErrorMessage(null);
+        } else {
+          setComic(null);
+          setErrorMessage("Comic does not exist");
+          setTimeout(() => {
+            navigate("/");
+          }, 2000);
+        }
+      } catch (error) {
+        console.log(error);
         setComic(null);
-        setErrorMessage("Comic does not exist");
+        setErrorMessage("Error fetching comic");
         setTimeout(() => {
           navigate("/");
         }, 2000);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.log(error);
-      setComic(null);
-      setErrorMessage("Error fetching comic");
-      setTimeout(() => {
-        navigate("/");
-      }, 2000);
-    }
-  };
+    };
+
+    fetchComic();
+  }, [id, navigate]);
 
   const toConvertData = (date) => {
     date = new Date(date);
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return date.toLocaleDateString('en-US', options);
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return date.toLocaleDateString("en-US", options);
   };
 
   const backToHome = () => {
     navigate("/");
   };
 
-  useEffect(() => {
-    fetchComic();
-  }, [id]);
-
   return (
-    <main>
-      <div>
-        <button onClick={backToHome}>
-          Back
-        </button>
-      </div>
+    <Main>
+      <HeaderMain>
+        <Button onClick={backToHome}>Back</Button>
+      </HeaderMain>
       {isLoading ? (
-          <div>Loading...</div>
-        ) : errorMessage ? (
-          <div>{errorMessage}</div>
-        ) : ( comic && (
-        <div key={comic.id}>
-          <div>
-            <img 
-              src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`} 
-              height="500px"
+        <BodyMain>Loading...</BodyMain>
+      ) : errorMessage ? (
+        <BodyMain>{errorMessage}</BodyMain>
+      ) : comic ? (
+        <BodyMain key={comic.id}>
+          <ImgComic>
+            <img
+              src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
+              alt={comic.title}
+              height="600px"
               width="auto"
             />
-          </div>  
-          <div>
-            <div>{comic.title}</div>
-            <div>
-              <div>
-                Published on: {toConvertData(comic.dates[1].date)}<br></br>
-                Number of Pages: {comic.pageCount}
-              </div>
-              <div>
-                <div>
-                  <p>Authors</p>
-                  {comic.creators.items && comic.creators.items.map((item, index) => (
-                    <li key={`${comic.id}-creator-${index}`}>
-                      {item.role}: {item.name} 
-                    </li>
+          </ImgComic>
+          <AboutComic>
+            <ContainerInformation>
+              <H2>{comic.title}</H2>
+            </ContainerInformation>
+            <ContainerInformation>
+              <AlignInformation>
+                <H3>Published In<br />{toConvertData(comic.dates[0].date)}</H3>
+                <H4>Authors</H4>
+                {comic.creators.items &&
+                  comic.creators.items.map((item, index) => (
+                    <BasicFont key={`${comic.id}-creator-${index}`}>
+                      {item.role.trim()}: {item.name}
+                    </BasicFont>
                   ))}
-                </div>
-                <div>
-                  {comic.characters.items && comic.characters.items.length > 0 && (
-                    <>
-                      <p>Characters</p>
-                      {comic.characters.items.map((item, index) => (
-                        <li key={`${comic.id}-character-${index}`}>
-                          {item.name}
-                        </li>
-                      ))}
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div>
-              {comic.description}
-            </div>
-          </div>
-        </div>
-      ))}
-    </main>
+              </AlignInformation>
+              <AlignInformation>
+                <H3>Saga Since<br />{comic.series.name}</H3>
+                {comic.characters.items && comic.characters.items.length > 0 && (
+                  <>
+                    <H4>Characters</H4>
+                    {comic.characters.items.map((item, index) => (
+                      <BasicFont key={`${comic.id}-character-${index}`}>
+                        {item.name.trim()}
+                      </BasicFont>
+                    ))}
+                  </>
+                )}
+              </AlignInformation>
+            </ContainerInformation>
+            <ContainerInformation>
+              <BasicFont>{comic.description}</BasicFont>
+            </ContainerInformation>
+          </AboutComic>
+        </BodyMain>
+      ) : null}
+      {/*<pre>{JSON.stringify(comic, undefined, 2)}</pre>*/}
+    </Main>
   );
 }

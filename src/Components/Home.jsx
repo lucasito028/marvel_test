@@ -10,14 +10,18 @@ export default function Home({ searchParams }) {
   const [comics, setComics] = useState([]);
   const [total, setTotal] = useState(0);
   const [characterId, setCharacterId] = useState();
-  const { limitParam, titleParam, dateParam, characterName } = searchParams;
+  const { limitParam , titleParam, dateParam, characterName } = searchParams;
 
   const getCharacterId = async () => {
     if (Boolean(characterName)) {
-      const queryInstance = new Api(['characters'], { name: characterName });
+      const queryInstance = new Api(['characters'], { 
+        orderBy: 'name',
+        nameStartsWith: characterName 
+      });
       try {
         const results = await queryInstance.select();
-        setCharacterId(results.results[0].id);
+        const id = results.results[0].id
+        setCharacterId(id)
       } catch (error) {
         console.log(error);
       }
@@ -29,12 +33,13 @@ export default function Home({ searchParams }) {
   const fetchComics = async () => {
     setIsLoading(true); 
     const queryInstance = new Api(['comics'], {
-      format: 'comic',
+      format: "comic",
       formatType: "comic",
       noVariants: true,
       dateRange: dateParam,
       titleStartsWith: titleParam || '',
-      characters: characterId || undefined,
+      characters: characterId,
+      //orderBy: "onsaleDate",
       limit: parseInt(limitParam, 10) || 20,
     });
 
@@ -57,8 +62,10 @@ export default function Home({ searchParams }) {
   };
 
   useEffect(() => {
+
     getCharacterId();
     fetchComics();
+
   }, [characterName, dateParam, titleParam, characterId, limitParam]);
 
   const handleComic = (id) => {
@@ -66,42 +73,51 @@ export default function Home({ searchParams }) {
   };
 
   return (
-      <Main>
+    <Main>
         <Filter>
-          {titleParam && <div>Selected Title: {titleParam}</div>}
-          {characterName && <div>Selected Hero: {characterName}</div>}
-          {/*characterId && <div>Selected Hero ID: {characterId}</div>*/}
-          {dateParam && <div>Selected Date: {dateParam[0]} to {dateParam[1]}</div>}
-          {limitParam && <div>Selected Limit: {limitParam}</div>}
-          {total && <div>Total Selected Comics: {total}</div>}
+            {titleParam && <div>Search Term: {titleParam}</div>}
+            {characterName && <div>Search Hero: {characterName}</div>}
+            {dateParam && <div>Selected Date: {dateParam[0]} to {dateParam[1]}</div>}
+            {!isNaN(limitParam) && limitParam !== null && (
+                <div>Limit: {limitParam}</div>
+            )}
+            {total !== 0 ? (
+                <div>Total Comics by results: {total}</div>
+            ) : (
+                <div>No results found.</div>
+            )}
         </Filter>
+
         {isLoading ? (
-          <div>Loading...</div>
+            <div>Loading...</div>
         ) : error ? (
-          <div>{error}</div>
+            <div>{error}</div>
+        ) : comics && comics.length > 0 ? (
+            <ContainerCard>
+                {comics.map((comic) => (
+                    <Card key={comic.id} onClick={() => handleComic(comic.id)}>
+                        <div>
+                            <p>{comic.id}</p>
+                            <img
+                                src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
+                                alt={comic.title}
+                                height="auto"
+                                width="200px"
+                            />
+                        </div>
+                        <ChieldCard>
+                            {comic.title}
+                            {comic.pageCount}
+                        </ChieldCard>
+                        <div>{toConvertData(comic.dates[0].date)}</div>
+                        <br />
+                    </Card>
+                ))}
+            </ContainerCard>
         ) : (
-        <ContainerCard>
-          {comics.map((comic) => (
-            <Card key={comic.id} onClick={() => handleComic(comic.id)}>
-              <div>
-                <p>{comic.id}</p>
-                <img
-                  src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
-                  alt={comic.title}
-                  height="auto"
-                  width="200px"
-                />
-              </div>
-              <ChieldCard>
-                {comic.title}
-                {comic.pageCount}
-              </ChieldCard>
-              <div>{toConvertData(comic.dates[0].date)}</div>
-              <br />
-            </Card>
-          ))}
-        </ContainerCard>
+            <div>No comics found.</div>
         )}
-      </Main>
-  );
+    </Main>
+);
+
 }

@@ -3,8 +3,8 @@ export class Api  {
     constructor(table = [], query = { id: null }) {
         this.table = table
         this.query = query;
-        this.publicKey = 'e053145fd0982715b5cdb1bb9e5fe0c2';
-        this.hash = '5d30905a04649c736f3cdf33c95b81db';
+        this.publicKey = '94af0665e97e68ff6637fc1e6d1daf7e';
+        this.hash = '87874f33acef3fdfb77ea4ed7c9c7a9c';
     }
 
     getBrazilianDate(date = new Date()) {
@@ -65,23 +65,29 @@ export class Api  {
             //url += `ts=1&apikey=${this.publicKey}&hash=${this.hash}`;
         }
         url += `ts=1&apikey=${this.publicKey}&hash=${this.hash}`;
-        console.log(url)
+        //console.log(url)
         return url;
     }
 
     async select() {
-        try{
+        
+        try {
             const url = this.buildUrl();
             const response = await fetch(url);
-            const data = await response.json();
-            if(data && data.data && data.data.results){
-                //console.log(data.data)
-                return data.data;
-            }else {
-                throw new Error('API não responde');
+    
+            if (!response.ok) {
+                throw new Error('Erro ao chamar a API da Marvel');
             }
-        }catch(error){
-            throw error;
+    
+            const data = await response.json();
+    
+            if (data && data.data && data.data.results) {
+                return data.data;
+            } else {
+                throw new Error('Resposta da API da Marvel não está no formato esperado');
+            }
+        } catch (error) {
+            throw new Error(`Erro ao processar requisição: ${error.message}`);
         }
     }
 

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const Main = styled.header `
+export const Main = styled.main `
   padding: 15px;
   display: block;
   justify-content: center;
@@ -9,10 +9,18 @@ export const Main = styled.header `
 
 export const Filter = styled.div `
       display: flex;
+      padding-left: 80px; 
 
-      div{
-      margin-right: 20px;
+      @media (max-width: 767px) {
+         display: grid;
+          place-items: center; 
+          padding-left: 0;
       }
+      
+      div {
+        margin: 10px;
+      }
+}
 `;
 
 export const ContainerCard = styled.div `
@@ -23,17 +31,29 @@ justify-content: center;
 align-items: center;
 `;
 export const Card = styled.div `
-  margin: auto;
   width: 200px;
   justify-content: center;
   align-items: center;
+  margin: 5px;
 
   div {
-    display:flex;
+    display: flex;
     flex-wrap: wrap;
     margin: auto;
     justify-content: center;
     align-items: center;
+  }
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: #e62429;
+  }
+    
+  &:active  {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: #e62429;
   }
 `;
 
