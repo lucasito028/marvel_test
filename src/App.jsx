@@ -4,6 +4,7 @@ import Header from './Components/Header';
 import Home from './Components/Home';
 import Footer from './Components/Footer';
 import AboutComics from './Components/AboutComics';
+import { Main } from './assets/app';
 
 function App() {
 
@@ -23,17 +24,16 @@ function App() {
   };
 
   return (
-    <>
+    <Main>
       <Router>
-      <Header onSearch={handleSearch} />
-        <Routes>
-          <Route path="/" element={<Home searchParams={search} />} />
-          <Route path="/comics/:id" element={<AboutComics />} />
-        </Routes>
+        <Header onSearch={handleSearch} />
+          <Routes>
+            <Route path="/" element={<Home searchParams={search} />} />
+            <Route path="/comics/:id" element={<AboutComics />} />
+          </Routes>
       </Router>
-
       <Footer />
-    </>
+    </Main>
   );
 }
 

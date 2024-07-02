@@ -1,0 +1,180 @@
+.align-items-center{
+    padding: 0;
+}
+/* Estilos para a seção de endereço */
+.address {
+    margin-top: 20px;
+}
+
+.fixed-button-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.main-color{
+    background-color: white;
+}
+
+.nav-link{
+    color: white;
+}
+
+.nav-link a{
+    color: white;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0);
+}
+
+.cardservice{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 33%;
+}
+.card-flyer{
+    width: 320px;
+    height: 480px;
+}
+
+.fixed-button2 {
+    margin-bottom: 10px;
+}
+
+.header {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.comp {
+    max-width: 75%;
+}
+.reveal {
+    position: relative;
+    opacity: 0;
+}  
+.fa {
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.publicacao {
+    flex: 0 0 calc(33.33% - 20px);
+    padding: 10px;
+    transition: transform 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    /*width: calc(33.33% - 20px);*/
+    width: 320px;
+    margin-right: 20px;
+    padding: 25px;
+}
+
+.bd {
+    max-width: 162px;
+}
+
+.w-100 {
+    min-height: 595px;
+    max-height: 595px;
+}
+
+.list-unstyled a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+/* Estilos para os contêineres internos */
+.cp {
+    width: 40%;
+    margin: 20px;
+}
+
+.contacts{
+    margin:0;
+}
+
+.carousel-inner{
+    height: auto; 
+    width: 100%;
+}
+
+.hb{
+    color: #0291dc;
+}
+
+.h-iso{
+    color:white
+}
+
+.fa-3x{
+    color:white;
+}
+
+/*Icone do Menu*/
+
+.bar1, .bar2, .bar3 {
+    width: 35px;
+    height: 4.5px;
+    background-color: white;
+    margin: 3px 0;
+    border-radius: 2px;;
+    transition: 0.4s;
+}
+
+.change .bar1 {
+    height: 5px;
+    transform: translate(0, 8px) rotate(-45deg);
+  }
+  
+.change .bar2 {opacity: 0;}
+  
+.change .bar3 {
+    transform: translate(0, -8px) rotate(45deg);
+  }
+
+/* Estilos para os ícones de mídia social */
+.fa-square-instagram,
+.fa-facebook,
+.fa-envelope,
+.fa-square-whatsapp {
+    padding-right: 10px;
+}
+
+
+/*Terminar o Icone do Menu*/
+.text-footer{
+    color: white;
+}
+
+.fixed-btn{
+    border-radius: 50%;
+}
+
+.text-space-around{
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+
+/*Codigo Adicionado para as animações*/
+.active.fade-left {
+    animation: fade-left 0.5s ease-in;
+}
+.active.fade-right {
+    animation: fade-right 0.5s ease-in;
+}
+.active.fade-bottom {
+    animation: fade-bottom 0.5s ease-in;
+}
+.reveal.active {
+    opacity: 1;
+}

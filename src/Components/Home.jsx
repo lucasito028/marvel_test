@@ -1,104 +1,107 @@
 import { useEffect, useState } from "react";
 import { Api } from "../Services/Api";
 import { useNavigate } from "react-router-dom";
+import { Main, Filter, ContainerCard, Card, ChieldCard } from "../assets/home";
 
 export default function Home({ searchParams }) {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [comics, setComics] = useState([]);
   const [total, setTotal] = useState(0);
-  const [characterId, setCharacterId] = useState()
+  const [characterId, setCharacterId] = useState();
   const { limitParam, titleParam, dateParam, characterName } = searchParams;
 
   const getCharacterId = async () => {
-    if(Boolean(characterName)){
-      const queryInstance = new Api(['characters'], {name: characterName});
+    if (Boolean(characterName)) {
+      const queryInstance = new Api(['characters'], { name: characterName });
       try {
         const results = await queryInstance.select();
-        setCharacterId(results.results[0].id)
-        } catch (error) {
-          console.log(error);
-        }
+        setCharacterId(results.results[0].id);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      setCharacterId(null);
     }
-    else {
-      setCharacterId(null)
-    }
-  };    
+  };
 
   const fetchComics = async () => {
-    const queryInstance = new Api(['comics'], { 
+    setIsLoading(true); 
+    const queryInstance = new Api(['comics'], {
       format: 'comic',
       formatType: "comic",
       noVariants: true,
-      dateRange: dateParam,  
-      titleStartsWith: titleParam || '', 
+      dateRange: dateParam,
+      titleStartsWith: titleParam || '',
       characters: characterId || undefined,
       limit: parseInt(limitParam, 10) || 20,
     });
-
-    console.log(queryInstance.titleParam)
 
     try {
       const results = await queryInstance.select();
       setTotal(results.total);
       setComics(results.results || []);
+      setIsLoading(false)
     } catch (error) {
       console.log(error);
+      setError(`Error this is a: ${error}`)
+      setIsLoading(false); 
     }
   };
 
   const toConvertData = (date) => {
     date = new Date(date);
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return date.toLocaleDateString('pt-BR', options);
+    return date.toLocaleDateString('en-US', options);
   };
 
   useEffect(() => {
-    console.log("3 - ")
-    console.log(searchParams)
     getCharacterId();
     fetchComics();
-  }, [characterName, dateParam, titleParam, 
-    characterId, 
-    limitParam]);
+  }, [characterName, dateParam, titleParam, characterId, limitParam]);
 
   const handleComic = (id) => {
     navigate(`/comics/${id}`);
   };
 
   return (
-    <>
-      <main>
-        <div>
-          {characterName && <> Nome do Herói selecionado: {characterName}<br></br></>}
-          {characterId && <> Nome do Herói selecionado: {characterId}<br></br></>}
-          {total && <>Total de Quadrinhos: {total}<br></br></>}
-          {dateParam && <>Data Selecionada: {dateParam[0]} entre {dateParam[1]}<br></br></>}
-          {titleParam && <>Título Selecionado: {titleParam}<br></br></>}
-          {limitParam && <>Limite Selecionado: {limitParam}<br></br></>}
-        </div>
-
-        <div>
+      <Main>
+        <Filter>
+          {titleParam && <div>Selected Title: {titleParam}</div>}
+          {characterName && <div>Selected Hero: {characterName}</div>}
+          {/*characterId && <div>Selected Hero ID: {characterId}</div>*/}
+          {dateParam && <div>Selected Date: {dateParam[0]} to {dateParam[1]}</div>}
+          {limitParam && <div>Selected Limit: {limitParam}</div>}
+          {total && <div>Total Selected Comics: {total}</div>}
+        </Filter>
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : error ? (
+          <div>{error}</div>
+        ) : (
+        <ContainerCard>
           {comics.map((comic) => (
-            <div key={comic.id} onClick={() => handleComic(comic.id)}>
-                <div>
-                  <img
-                    src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
-                    alt={comic.title}
-                    height="250px"
-                    width="auto"
-                  />
-                </div>
-                <div>
-                  {comic.title}
-                  {comic.pageCount} 
-                </div>
-                <div>{toConvertData(comic.dates[0].date)}</div>
+            <Card key={comic.id} onClick={() => handleComic(comic.id)}>
+              <div>
+                <p>{comic.id}</p>
+                <img
+                  src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
+                  alt={comic.title}
+                  height="auto"
+                  width="200px"
+                />
+              </div>
+              <ChieldCard>
+                {comic.title}
+                {comic.pageCount}
+              </ChieldCard>
+              <div>{toConvertData(comic.dates[0].date)}</div>
               <br />
-              <br />
-            </div>
+            </Card>
           ))}
-        </div>
-      </main>
-    </>
+        </ContainerCard>
+        )}
+      </Main>
   );
 }
