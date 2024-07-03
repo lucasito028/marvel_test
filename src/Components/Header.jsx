@@ -13,27 +13,24 @@ export default function Header({ onSearch }) {
   ]);
   const [characterList, setCharacterList] = useState([]);
   const [comicsList, setComicsList] = useState([]);
-  const characterListRef = useRef(null); // Ref para o elemento da lista de personagens
-  const comicsListRef = useRef(null); // Ref para o elemento da lista de títulos de séries
+  const characterListRef = useRef(null); 
+  const comicsListRef = useRef(null); 
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Verifica se o clique foi fora do elemento da lista de personagens
+
       if (characterListRef.current && !characterListRef.current.contains(event.target)) {
-        setCharacterList([]); // Fecha a lista de personagens
+        setCharacterList([]); 
       }
 
-      // Verifica se o clique foi fora do elemento da lista de títulos de séries
       if (comicsListRef.current && !comicsListRef.current.contains(event.target)) {
-        setComicsList([]); // Fecha a lista de títulos de séries
+        setComicsList([]); 
       }
     };
 
-    // Adiciona event listener para capturar cliques fora dos elementos das listas
     document.addEventListener('click', handleClickOutside);
 
     return () => {
-      // Remove event listener ao desmontar o componente
       document.removeEventListener('click', handleClickOutside);
     };
   }, []);
