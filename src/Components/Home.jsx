@@ -1,37 +1,41 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Api } from "../Services/Api";
 import { useNavigate } from "react-router-dom";
 import { Main, Filter, ContainerCard, Card, ChieldCard } from "../assets/home";
 
 export default function Home({ searchParams }) {
+  
   const navigate = useNavigate();
+  const { titleParam, dateParam, characterName} = searchParams;
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [comics, setComics] = useState([]);
   const [total, setTotal] = useState(0);
   const [characterId, setCharacterId] = useState();
-  const { limitParam , titleParam, dateParam, characterName } = searchParams;
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true); 
 
-  const getCharacterId = async () => {
+  const getCharacterId = useCallback(async () => {
     if (Boolean(characterName)) {
-      const queryInstance = new Api(['characters'], { 
+      const queryInstance = new Api(['characters'], {
         orderBy: 'name',
-        nameStartsWith: characterName 
+        nameStartsWith: characterName,
       });
       try {
         const results = await queryInstance.select();
-        const id = results.results[0].id
-        setCharacterId(id)
+        const id = results.results[0].id;
+        setCharacterId(id);
       } catch (error) {
         console.log(error);
       }
     } else {
       setCharacterId(null);
     }
-  };
+  }, [characterName]);
 
-  const fetchComics = async () => {
-    setIsLoading(true); 
+  const fetchComics = useCallback(async (currentPage) => {
+    setIsLoading(true);
+    const limit = 20; 
     const queryInstance = new Api(['comics'], {
       format: "comic",
       formatType: "comic",
@@ -39,34 +43,65 @@ export default function Home({ searchParams }) {
       dateRange: dateParam,
       titleStartsWith: titleParam || '',
       characters: characterId,
-      //orderBy: "onsaleDate",
-      limit: parseInt(limitParam, 10) || 20,
+      offset: (currentPage - 1) * limit,
+      limit: limit
     });
 
     try {
       const results = await queryInstance.select();
       setTotal(results.total);
-      setComics(results.results || []);
-      setIsLoading(false)
+      if (currentPage === 1) {
+        setComics(results.results);
+      } else {
+        setComics((prevComics) => [...prevComics, ...results.results]);
+      }
+      setHasMore(results.results.length > 0);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
-      setError(`Error this is a: ${error}`)
-      setIsLoading(false); 
+      setError(`Error: ${error.message}`);
+      setIsLoading(false);
     }
-  };
+  }, [characterId, dateParam, titleParam]);
 
   const toConvertData = (date) => {
     date = new Date(date);
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return date.toLocaleDateString('en-US', options);
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return date.toLocaleDateString("en-US", options);
   };
 
   useEffect(() => {
-
     getCharacterId();
-    fetchComics();
+  }, [characterName, getCharacterId]);
 
-  }, [characterName, dateParam, titleParam, characterId, limitParam]);
+  useEffect(() => {
+    if (characterId !== undefined) {
+      setPage(1); // Reiniciar a página
+      setComics([]); // Limpar os quadrinhos
+      fetchComics(1); // Buscar quadrinhos com a nova pesquisa
+    }
+  }, [characterId, dateParam, titleParam, fetchComics]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollHeight = document.documentElement.scrollHeight; 
+      const scrollTop = document.documentElement.scrollTop; 
+      const clientHeight = document.documentElement.clientHeight; 
+
+      if (scrollHeight - scrollTop <= clientHeight + 500 && !isLoading && hasMore) {
+        setPage((prevPage) => prevPage + 1);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isLoading, hasMore]);
+
+  useEffect(() => {
+    if (page > 1) {
+      fetchComics(page);
+    }
+  }, [page, fetchComics]);
 
   const handleComic = (id) => {
     navigate(`/comics/${id}`);
@@ -74,50 +109,48 @@ export default function Home({ searchParams }) {
 
   return (
     <Main>
-        <Filter>
-            {titleParam && <div>Search Term: {titleParam}</div>}
-            {characterName && <div>Search Hero: {characterName}</div>}
-            {dateParam && <div>Selected Date: {dateParam[0]} to {dateParam[1]}</div>}
-            {!isNaN(limitParam) && limitParam !== null && (
-                <div>Limit: {limitParam}</div>
-            )}
-            {total !== 0 ? (
-                <div>Total Comics by results: {total}</div>
-            ) : (
-                <div>No results found.</div>
-            )}
-        </Filter>
-
-        {isLoading ? (
-            <div>Loading...</div>
-        ) : error ? (
-            <div>{error}</div>
-        ) : comics && comics.length > 0 ? (
-            <ContainerCard>
-                {comics.map((comic) => (
-                    <Card key={comic.id} onClick={() => handleComic(comic.id)}>
-                        <div>
-                            <p>{comic.id}</p>
-                            <img
-                                src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
-                                alt={comic.title}
-                                height="auto"
-                                width="200px"
-                            />
-                        </div>
-                        <ChieldCard>
-                            {comic.title}
-                            {comic.pageCount}
-                        </ChieldCard>
-                        <div>{toConvertData(comic.dates[0].date)}</div>
-                        <br />
-                    </Card>
-                ))}
-            </ContainerCard>
+      <Filter>
+        {titleParam && <div>Term: {titleParam}</div>}
+        {characterName && <div>Hero: {characterName}</div>}
+        {dateParam && <div>Selected Date: {dateParam[0]} to {dateParam[1]}</div>}
+        {total !== 0 ? (
+          <div>Total: {total}</div>
         ) : (
-            <div>No comics found.</div>
+          <div>No results found.</div>
         )}
-    </Main>
-);
+      </Filter>
 
+      {isLoading && page === 1 ? (
+        <div>Loading...</div>
+      ) : error ? (
+        <div>{error}</div>
+      ) : comics && comics.length > 0 ? (
+        <>
+          <ContainerCard>
+            {comics.map((comic, index) => (
+              <Card key={`${comic.id}-${index}`} onClick={() => handleComic(comic.id)}>
+                <div>
+                  <img
+                    src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
+                    alt={comic.title}
+                    height="auto"
+                    width="200px"
+                  />
+                </div>
+                <ChieldCard>
+                  {comic.title}
+                  {comic.pageCount}
+                </ChieldCard>
+                <div>{toConvertData(comic.dates[0].date)}</div>
+                <br />
+              </Card>
+            ))}
+          </ContainerCard>
+          {isLoading && page > 1 && <div>Loading more comics...</div>}
+        </>
+      ) : (
+        <div>No comics found.</div>
+      )}
+    </Main>
+  );
 }

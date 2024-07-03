@@ -1,10 +1,15 @@
+import md5 from "md5";
+
 export class Api  {
 
     constructor(table = [], query = { id: null }) {
         this.table = table
         this.query = query;
         this.publicKey = '94af0665e97e68ff6637fc1e6d1daf7e';
-        this.hash = '87874f33acef3fdfb77ea4ed7c9c7a9c';
+        this.test = 'e053145fd0982715b5cdb1bb9e5fe0c2'
+        this.hash = '5d30905a04649c736f3cdf33c95b81db'
+        this.privateKey = 'a3b29e77d004afdc0c0d49f34173dbba30f288f1';
+
     }
 
     getBrazilianDate(date = new Date()) {
@@ -64,7 +69,7 @@ export class Api  {
             }
             //url += `ts=1&apikey=${this.publicKey}&hash=${this.hash}`;
         }
-        url += `ts=1&apikey=${this.publicKey}&hash=${this.hash}`;
+        url += `ts=1&apikey=${this.test}&hash=${this.hash}`;
         //console.log(url)
         return url;
     }

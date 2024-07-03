@@ -11,9 +11,10 @@ export const Main = styled.main`
 `;
 
 export const HeaderMain = styled.div`
-background-color: rgb(32, 32, 32);
 border-top: 0.5px groove rgb(251, 251, 251);
+width: 100%;
 color: #fff;
+padding-left: 100px;
 `;
 
 export const BodyMain = styled.div`
@@ -125,10 +126,8 @@ export const AlignInformation = styled.div`
 export const Button = styled.button`
   background-color: rgb(32, 32, 32);
   color: white;
-  height: 50px;
-  width: 50px;
+  padding: 15px;
   font-size: 18px;
   font-family: "Roboto", sans-serif;
   font-weight: bold;
-  margin: 15px;
 `;
