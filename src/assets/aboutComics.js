@@ -5,16 +5,30 @@ export const Main = styled.main`
   place-items: center;
   font-weight: bold;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.8);
   height: 90%
 
 `;
 
 export const HeaderMain = styled.div`
-border-top: 0.5px groove rgb(251, 251, 251);
 width: 100%;
 color: #fff;
 padding-left: 100px;
+
+button {
+    background-color: #151515;
+    border: 1px solid rgba(255, 255, 255, 0.6); /* Borda mais fina e leve */
+    padding: 7px;
+    font-family: "Sen", sans-serif;
+    font-size: 16px;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-shadow: 0 0 1px rgba(255, 255, 255, 0.8);
+    transition: box-shadow 0.3s ease; /* Transição suave para o efeito de foco */
+  }
+
+button:hover, input:focus {
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.8); /* Efeito de brilho ao focar ou passar o mouse */
 `;
 
 export const BodyMain = styled.div`

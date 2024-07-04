@@ -16,6 +16,7 @@ function App() {
   });
 
   const handleSearch = (params) => {
+    console.log(params)
     setSearch(params);
   };
 

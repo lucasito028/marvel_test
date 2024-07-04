@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { Api } from "../Services/Api";
 import { useNavigate } from "react-router-dom";
-import { Main, Filter, ContainerCard, Card, ChieldCard } from "../assets/home";
+import { Main, Filter, ContainerCard, Card, ChieldCard, H2} from "../assets/home";
 
 export default function Home({ searchParams }) {
   
@@ -14,6 +14,13 @@ export default function Home({ searchParams }) {
   const [characterId, setCharacterId] = useState();
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true); 
+
+  const cleanTitleParam = useCallback(() => {
+    if (titleParam) {
+      return titleParam.trim(); 
+    }
+    return '';
+  }, [titleParam]);
 
   const getCharacterId = useCallback(async () => {
     if (Boolean(characterName)) {
@@ -41,7 +48,8 @@ export default function Home({ searchParams }) {
       formatType: "comic",
       noVariants: true,
       dateRange: dateParam,
-      titleStartsWith: titleParam || '',
+      title: titleParam || '',
+      //titleStartsWith: titleParam || '',
       characters: characterId,
       offset: (currentPage - 1) * limit,
       limit: limit
@@ -110,11 +118,11 @@ export default function Home({ searchParams }) {
   return (
     <Main>
       <Filter>
-        {titleParam && <div>Term: {titleParam}</div>}
-        {characterName && <div>Hero: {characterName}</div>}
-        {dateParam && <div>Selected Date: {dateParam[0]} to {dateParam[1]}</div>}
+        {/*titleParam && <div>Term: {titleParam}</div>*/}
+        {/*characterName && <div>Hero: {characterName}</div>*/}
+        {/*dateParam && <div>Selected Date: {dateParam[0]} to {dateParam[1]}</div>*/}
         {total !== 0 ? (
-          <div>Total: {total}</div>
+          <div><H2>Total: {total}</H2></div>
         ) : (
           <div>No results found.</div>
         )}

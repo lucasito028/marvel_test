@@ -6,23 +6,16 @@ export const Main = styled.main `
   justify-content: center;
   align-items: center;
 `;
-
 export const Filter = styled.div `
-      display: flex;
-      padding-left: 80px; 
+      display: grid;
+      place-items: center; 
+      padding-left: 0;
 
-      @media (max-width: 767px) {
-         display: grid;
-          place-items: center; 
-          padding-left: 0;
-      }
-      
       div {
         margin: 10px;
       }
 }
 `;
-
 export const ContainerCard = styled.div `
 display: flex;
 flex-wrap: wrap;
@@ -50,14 +43,18 @@ export const Card = styled.div `
 
   &:hover img{
     transform: scale(1.01);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
   }
     
   &:active  {
     transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 2px rgba(0, 0, 0, 0.2);
     color: #e62429;
   }
 `;
+export const H2 = styled.h2 `
+font-weight: bold;
+font-size: 18px;`
 
 export const ChieldCard = styled.div `
   margin: auto;
@@ -66,5 +63,3 @@ export const ChieldCard = styled.div `
   align-items: center;
   margin 10px;
 `;
-
-

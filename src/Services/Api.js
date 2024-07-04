@@ -70,7 +70,7 @@ export class Api  {
             //url += `ts=1&apikey=${this.publicKey}&hash=${this.hash}`;
         }
         url += `ts=1&apikey=${this.test}&hash=${this.hash}`;
-        //console.log(url)
+        console.log(url)
         return url;
     }
 

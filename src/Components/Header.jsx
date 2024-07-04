@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { HeaderBackground, Container } from '../assets/header';
+import { HeaderBox, Container, TwoInput, DateInput, DivInput, ListOptions } from '../assets/header';
 import { Api } from '../Services/Api';
+import { Search } from '@styled-icons/boxicons-regular/Search'
 
 export default function Header({ onSearch }) {
   const navigate = useNavigate();
@@ -13,18 +14,19 @@ export default function Header({ onSearch }) {
   ]);
   const [characterList, setCharacterList] = useState([]);
   const [comicsList, setComicsList] = useState([]);
-  const characterListRef = useRef(null); 
-  const comicsListRef = useRef(null); 
+  const characterListRef = useRef(null);
+  const comicsListRef = useRef(null);
+  const [showDateInputs, setShowDateInputs] = useState(false);
+  const [showCharacterInput, setShowCharacterInput] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-
       if (characterListRef.current && !characterListRef.current.contains(event.target)) {
-        setCharacterList([]); 
+        setCharacterList([]);
       }
 
       if (comicsListRef.current && !comicsListRef.current.contains(event.target)) {
-        setComicsList([]); 
+        setComicsList([]);
       }
     };
 
@@ -35,7 +37,7 @@ export default function Header({ onSearch }) {
     };
   }, []);
 
-  useEffect(() => {
+  const fetchCharacterNameResult = useCallback(async() => {
     if (characterName) {
       const queryInstance = new Api(['characters'], {
         orderBy: 'name',
@@ -51,12 +53,15 @@ export default function Header({ onSearch }) {
     }
   }, [characterName]);
 
-  useEffect(() => {
+  const fetchComicTitleResult = useCallback(async() => {
     if (titleParam) {
-      const queryInstance = new Api(['series'], {
+      const queryInstance = new Api(['comics'], {
         titleStartsWith: titleParam,
-        contains: "comic",
-        orderBy: '-title',
+        format: "comic",
+        formatType: "comic",
+        noVariants: true,
+        dateRange: dateParam,
+        orderBy: 'title',
       });
       queryInstance.select().then(results => {
         setComicsList(results.results);
@@ -66,7 +71,17 @@ export default function Header({ onSearch }) {
     } else {
       setComicsList([]);
     }
+  }, [titleParam, dateParam]);
+  
+
+  useEffect(() => {
+    fetchCharacterNameResult();
+  }, [characterName, dateParam]);
+
+  useEffect(() => {
+    fetchComicTitleResult();
   }, [titleParam]);
+
 
   const handleChangeTitle = (e) => {
     setTitleParam(e.target.value);
@@ -89,55 +104,96 @@ export default function Header({ onSearch }) {
     navigate('/');
   };
 
+  const uniqueTitles = [...new Set(comicsList.map(comic =>
+    comic.title
+      .replace(/[.#]/g, '') // Remove "#" e "."
+      .replace(/\s*\([^)]*\)/, '') // Remove texto entre parênteses
+      .replace(/\d+$/, '') // Remove números apenas do final
+  ))];
+
+  const handleToggleDateInputs = () => {
+    setShowDateInputs(!showDateInputs);
+    setShowCharacterInput(false); // Garante que apenas um dos inputs esteja visível por vez
+  };
+
+  const handleToggleCharacterInput = () => {
+    setShowCharacterInput(!showCharacterInput);
+    setShowDateInputs(false); // Garante que apenas um dos inputs esteja visível por vez
+  };
+
   return (
-    <HeaderBackground>
+    <HeaderBox>
       <Container>
         <div>
           <span aria-hidden="true">
-            {/* SVG logo */}
+            <svg width="130" height="52" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect fill="#EC1D24" width="100%" height="100%"></rect>
+              <path fill="#FEFEFE" d="M126.222 40.059v7.906H111.58V4h7.885v36.059h6.757zm-62.564-14.5c-.61.294-1.248.44-1.87.442v-14.14h.04c.622-.005 5.264.184 5.264 6.993 0 3.559-1.58 5.804-3.434 6.705zM40.55 34.24l2.183-18.799 2.265 18.799H40.55zm69.655-22.215V4.007H87.879l-3.675 26.779-3.63-26.78h-8.052l.901 7.15c-.928-1.832-4.224-7.15-11.48-7.15-.047-.002-8.06 0-8.06 0l-.031 39.032-5.868-39.031-10.545-.005-6.072 40.44.002-40.435H21.278L17.64 26.724 14.096 4.006H4v43.966h7.95V26.78l3.618 21.192h4.226l3.565-21.192v21.192h15.327l.928-6.762h6.17l.927 6.762 15.047.008h.01v-.008h.02V33.702l1.845-.27 3.817 14.55h7.784l-.002-.01h.022l-5.011-17.048c2.538-1.88 5.406-6.644 4.643-11.203v-.002C74.894 19.777 79.615 48 79.615 48l9.256-.027 6.327-39.85v39.85h15.007v-7.908h-7.124v-10.08h7.124v-8.03h-7.124v-9.931h7.124z"></path>
+              <path fill="#EC1D24" d="M0 0h30v52H0z"></path>
+              <path fill="#FEFEFE" d="M31.5 48V4H21.291l-3.64 22.735L14.102 4H4v44h8V26.792L15.577 48h4.229l3.568-21.208V48z"></path>
+            </svg>
           </span>
         </div>
 
         <div>
           <form onSubmit={handleSubmit}>
-            <div>
+            <DivInput>
               <input
                 type="text"
                 placeholder="Search comics"
                 value={titleParam}
                 onChange={handleChangeTitle}
               />
-              <button type="submit">Search</button>
-            </div>
-            <div>
-              <div>
-                <input
-                  type="date"
-                  placeholder="Date between"
-                  value={dateParam[0] || ''}
-                  onChange={(e) => handleChangeDate(0, e)}
-                />
-                <input
-                  type="date"
-                  placeholder="Date between"
-                  value={dateParam[1] || ''}
-                  onChange={(e) => handleChangeDate(1, e)}
-                />
-              </div>
-              <div>
-                <input
-                  type="text"
-                  placeholder="Character Name"
-                  value={characterName}
-                  onChange={handleChangeCharacter}
-                />
-              </div>
-            </div>
+              <button type="submit"> Search </button>
+            </DivInput>
+
+            <TwoInput>
+              <button type="button" onClick={handleToggleDateInputs}>
+                {showDateInputs ?  'Carne'  :  'Ativado' }
+              </button>
+              <button type="button" onClick={handleToggleCharacterInput}>
+                {showCharacterInput ? 'Picanha' : 'Ativado'}
+              </button>
+            </TwoInput>
+
+            {showDateInputs && (
+              <TwoInput>
+                <DateInput>
+                  <input
+                    type="date"
+                    placeholder="Date between"
+                    value={dateParam[0] || ''}
+                    onChange={(e) => handleChangeDate(0, e)}
+                  />
+                  <input
+                    type="date"
+                    placeholder="Date between"
+                    value={dateParam[1] || ''}
+                    onChange={(e) => handleChangeDate(1, e)}
+                  />
+                </DateInput>
+              </TwoInput>
+            )}
+
+            {showCharacterInput && (
+              <TwoInput>
+                <DateInput>
+                  <input
+                    type="text"
+                    placeholder="Character Name"
+                    value={characterName}
+                    onChange={handleChangeCharacter}
+                  />
+                </DateInput>
+              </TwoInput>
+            )}
           </form>
         </div>
+      </Container>
 
-        {characterList.length > 0 && (
-          <div ref={characterListRef}>
+      <Container>
+      {characterList.length > 0 && (
+          <ListOptions ref={characterListRef} className="visible">
             <h4>Characters:</h4>
             <ul>
               {characterList.map(character => (
@@ -146,22 +202,22 @@ export default function Header({ onSearch }) {
                 </li>
               ))}
             </ul>
-          </div>
+          </ListOptions>
         )}
 
         {comicsList.length > 0 && (
-          <div ref={comicsListRef}>
+          <ListOptions ref={comicsListRef} className="visible">
             <h4>Series:</h4>
             <ul>
-              {comicsList.map(comic => (
-                <li key={comic.id} onClick={() => setTitleParam(comic.title.replace(/\s*\([^)]*\)/, ''))}>
-                  {comic.title.replace(/\s*\([^)]*\)/, '')}
+              {uniqueTitles.map(title => (
+                <li key={title} onClick={() => setTitleParam(title)}>
+                  {title}
                 </li>
               ))}
             </ul>
-          </div>
-        )}      
+          </ListOptions>
+        )}
       </Container>
-    </HeaderBackground>
+    </HeaderBox>
   );
 }
