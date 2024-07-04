@@ -92,7 +92,7 @@ export default function AboutComics() {
             <ContainerInformation>
               <AlignInformation>
                 <H3>Published In<br />{toConvertData(comic.dates[0].date)}</H3>
-                <H4>Authors</H4>
+                <H4>Contributors</H4>
                 {comic.creators.items &&
                   comic.creators.items.map((item, index) => (
                     <BasicFont key={`${comic.id}-creator-${index}`}>

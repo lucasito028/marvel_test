@@ -50,13 +50,17 @@ export const DivInput = styled.div`
 
 `;
 export const TwoInput = styled.div`
-  flex-direction:row;
+  flex-direction: row;
   align-items: center;
   color: black;
   
+  div {
+  flex-direction: column;
+  align-items: center;
+  }
+
   input, button {
-    margin-left: 4px;
-    margin-left: 4px;
+    margin: 5px;
   }
 
 `;

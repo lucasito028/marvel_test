@@ -4,6 +4,7 @@ import { HeaderBox, Container, TwoInput, DateInput, DivInput, ListOptions } from
 import { ServiceFilter } from '../Services/ServiceFilter';
 
 export default function Header({ onSearch }) {
+  
   const navigate = useNavigate();
   const [titleParam, setTitleParam] = useState('');
   const [characterName, setCharacterName] = useState('');
@@ -124,7 +125,7 @@ export default function Header({ onSearch }) {
 
             {showDateInputs && (
               <TwoInput>
-                <DateInput>
+                <div>
                   <input
                     type="date"
                     placeholder="Date between"
@@ -137,20 +138,20 @@ export default function Header({ onSearch }) {
                     value={dateParam[1] || ''}
                     onChange={(e) => handleChangeDate(1, e)}
                   />
-                </DateInput>
+                </div>
               </TwoInput>
             )}
 
             {showCharacterInput && (
               <TwoInput>
-                <DateInput>
+                <div>
                   <input
                     type="text"
                     placeholder="Character Name"
                     value={characterName}
                     onChange={handleChangeCharacter}
                   />
-                </DateInput>
+                </div>
               </TwoInput>
             )}
           </form>
