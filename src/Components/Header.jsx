@@ -70,23 +70,21 @@ export default function Header({ onSearch }) {
     setCharacterName(e.target.value);
   };
 
-
   const handleChangeDate = (index, e) => {
     const newDateParam = [...dateParam];
     newDateParam[index] = e.target.value;
     setDateParam(newDateParam);
   };
 
+
   const handleToggleDateInputs = () => {
     setShowDateInputs(!showDateInputs);
     setShowCharacterInput(false); 
-    setShowTypeOfComic(false)
   };
 
   const handleToggleCharacterInput = () => {
     setShowDateInputs(false);
-    setShowCharacterInput(!showCharacterInput);
-    setShowTypeOfComic(false) 
+    setShowCharacterInput(!showCharacterInput); 
   };
 
 
@@ -99,6 +97,7 @@ export default function Header({ onSearch }) {
 useEffect(() => {
   fetchCharacterNameResult()
 }, [characterName]);
+
 
   return (
     <HeaderBox>
@@ -165,25 +164,26 @@ useEffect(() => {
                 </div>
               </TwoInput>
             )}
+
           </form>
         </nav>
       </Container>
 
       <Container>
-      {characterList.length > 0 && (
-          <ListOptions ref={characterListRef} className="visible">
-            <h4>Characters:</h4>
-            <ul>
-              {characterList.map(character => (
-                <li key={character.id} onClick={() => setCharacterName(character.name)}>
-                  {character.name}
-                </li>
-              ))}
-            </ul>
-          </ListOptions>
-        )}
-
+        {characterList.length > 0 && (
+            <ListOptions ref={characterListRef} className="visible">
+              <h4>Characters:</h4>
+              <ul>
+                {characterList.map(character => (
+                  <li key={character.id} onClick={() => setCharacterName(character.name)}>
+                    {character.name}
+                  </li>
+                ))}
+              </ul>
+            </ListOptions>
+          )}
       </Container>
+      
     </HeaderBox>
   );
 }

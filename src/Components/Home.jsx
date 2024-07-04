@@ -1,6 +1,13 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Main, Filter, ContainerCard, Card, ChieldCard, H2} from "../assets/home";
+import { Main, 
+  Filter, 
+  ContainerCard, 
+  Card, 
+  ChieldCard, 
+  BadDiv} from "../assets/home";
+import {H2} from "../assets/aboutComics"
+import {EmojiSad} from '@styled-icons/entypo/EmojiSad'
 import { ServiceBody } from '../Services/ServiceHome';
 import { ServiceFilter } from '../Services/ServiceFilter';
 
@@ -17,6 +24,7 @@ export default function Home({ searchParams }) {
   const [hasMore, setHasMore] = useState(true); 
 
   const getCharacterId = useCallback(async () => {
+
     if (Boolean(characterName)) {
       const queryInstance = new ServiceFilter(['characters'], {
         orderBy: 'name',
@@ -38,6 +46,7 @@ export default function Home({ searchParams }) {
     
     setIsLoading(true);
     const limit = 20; 
+
     const queryInstance = new ServiceBody(['comics'], {
       format: "comic",
       formatType: "comic",
@@ -52,17 +61,19 @@ export default function Home({ searchParams }) {
     try {
       const results = await queryInstance.select();
       setTotal(results.total);
-      if (currentPage === 1) {
-        setComics(results.results);
-      } else {
-        setComics((prevComics) => [...prevComics, ...results.results]);
-      }
+        if (currentPage === 1) {
+          setComics(results.results);
+        } else {
+          setComics((prevComics) => [...prevComics, ...results.results]);
+        }
       setHasMore(results.results.length > 0);
       setIsLoading(false);
+
     } catch (error) {
       console.log(error);
       setError(`Error: ${error.message}`);
       setIsLoading(false);
+
     }
   }, [characterId, dateParam, titleParam]);
 
@@ -72,16 +83,16 @@ export default function Home({ searchParams }) {
     return date.toLocaleDateString("en-US", options);
   };
 
-  //Use Effect Camp
+
   useEffect(() => {
     getCharacterId();
   }, [characterName, getCharacterId]);
 
   useEffect(() => {
     if (characterId !== undefined) {
-      setPage(1); // Reiniciar a página
-      setComics([]); // Limpar os quadrinhos
-      fetchComics(1); // Buscar quadrinhos com a nova pesquisa
+      setPage(1); 
+      setComics([]); 
+      fetchComics(1); 
     }
   }, [characterId, dateParam, titleParam, fetchComics]);
 
@@ -92,11 +103,12 @@ export default function Home({ searchParams }) {
       const clientHeight = document.documentElement.clientHeight; 
 
       if (scrollHeight - scrollTop <= clientHeight + 500 && !isLoading && hasMore) {
-        setPage((prevPage) => prevPage + 1);
+        setPage((actualPage) => actualPage + 1);
       }
     };
 
     window.addEventListener("scroll", handleScroll);
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isLoading, hasMore]);
 
@@ -113,21 +125,23 @@ export default function Home({ searchParams }) {
   return (
     <Main>
       <Filter>
-        {/*titleParam && <div>Term: {titleParam}</div>*/}
-        {/*characterName && <div>Hero: {characterName}</div>*/}
-        {/*dateParam && <div>Selected Date: {dateParam[0]} to {dateParam[1]}</div>*/}
         {total !== 0 ? (
           <div><H2>Total: {total}</H2></div>
         ) : (
-          <div>No results found.</div>
+          <div>Total Nothing.</div>
         )}
       </Filter>
 
-      {isLoading && page === 1 ? (
-        <div>Loading...</div>
-      ) : error ? (
-        <div>{error}</div>
-      ) : comics && comics.length > 0 ? (
+      {isLoading && 
+      page === 1 ? 
+        (<ContainerCard>
+          <BadDiv>
+            Loading....
+          </BadDiv>
+       </ContainerCard>) : 
+      error ? 
+        ( <div>{error}<EmojiSad /></div> ) : 
+      comics && comics.length > 0 ? (
         <>
           <ContainerCard>
             {comics.map((comic, index) => (
@@ -152,8 +166,14 @@ export default function Home({ searchParams }) {
           {isLoading && page > 1 && <div>Loading more comics...</div>}
         </>
       ) : (
-        <div>No comics found.</div>
-      )}
+        <ContainerCard>
+            <BadDiv>
+              No comics found.
+            </BadDiv>
+            <BadDiv>
+              <EmojiSad size="48"/>
+            </BadDiv>
+         </ContainerCard>)}
     </Main>
   );
 }

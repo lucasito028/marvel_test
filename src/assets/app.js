@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Main = styled.main`
   font-family: "Roboto", sans-serif;
-  font-size: 16px;
+  font-size: 18px;
   color: white;
   background-color: #151515;
   font-weight: medium;

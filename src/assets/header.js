@@ -8,7 +8,6 @@ export const HeaderBox = styled.header`
   justify-content: center;
   align-items: center; 
 `;
-
 export const Container = styled.div`
   padding-top: 12px;
 
@@ -46,20 +45,18 @@ export const Container = styled.div`
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.8); 
 }
 `;
-
 export const DivInput = styled.div`
   display: inline-block;
   width: 360px;
 `;
-
 export const TwoInput = styled.div`
   flex-direction: row;
   align-items: center;
   color: black;
   
   div {
-  flex-direction: column;
-  align-items: center;
+    flex-direction: column;
+    align-items: center;
   }
 
   input, button {
@@ -67,18 +64,17 @@ export const TwoInput = styled.div`
   }
 
 `;
-
 export const ListOptions = styled.div`
   left: 0;
   width: 300px;
   height: 150px;
   background-color: #303030;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  display: none; /* Inicialmente oculto */
+  display: none; 
   overflow: scroll;
 
   &.visible {
-    display: block; /* Mostra quando visível */
+    display: block; 
   }
 
   div{
@@ -106,23 +102,20 @@ export const ListOptions = styled.div`
     }
   }
 `;
-
 export const CalendarDateHabled = styled(CalendarDate)`
-color: white;
-`
-  
+  color: white;
+`;
 export const CalendarDateDisabled = styled(CalendarDate)`
-color: #7C7C7C;
+  color: #7C7C7C;
 
-&:hover {
-    color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-`
-
+  &:hover {
+      color: white;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+`;
 export const SuperpowersHabled = styled(Superpowers)`
 color: white;
-`
+`;
 export const SuperpowersDisabled = styled(Superpowers)`
 color: #7C7C7C;
 &:hover {

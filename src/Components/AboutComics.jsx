@@ -27,8 +27,10 @@ export default function AboutComics() {
 
   useEffect(() => {
     const fetchComic = async () => {
+
       setIsLoading(true);
       const queryInstance = new ServiceBody(["comics"], { id });
+
       try {
         const data = await queryInstance.select();
         if (data.results.length > 0) {
@@ -41,6 +43,7 @@ export default function AboutComics() {
             navigate("/");
           }, 2000);
         }
+
       } catch (error) {
         console.log(error);
         setComic(null);
@@ -71,18 +74,15 @@ export default function AboutComics() {
       <HeaderMain>
         <Button onClick={backToHome}>Back</Button>
       </HeaderMain>
-      {isLoading ? (
-        <BodyMain>Loading...</BodyMain>
-      ) : errorMessage ? (
-        <BodyMain>{errorMessage}</BodyMain>
-      ) : comic ? (
+      {
+      isLoading ? (<BodyMain>Loading...</BodyMain>) 
+      : errorMessage ? (<BodyMain>{errorMessage}</BodyMain>) 
+      : comic ? (
         <BodyMain key={comic.id}>
           <ImgComic>
             <img
               src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
               alt={comic.title}
-              height="600px"
-              width="auto"
             />
           </ImgComic>
           <AboutComic>

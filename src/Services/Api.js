@@ -41,12 +41,11 @@ export default class Api  {
                         if(type[0] > type[1]){
                                 //console.log("Trocando Valores")
                                 //console.log(`Antes: ${type}`)
-                                /*
+                        
                                 let aux = type[0] 
                                 type[0] = type[1] 
                                 type[1] = aux
-                                */
-                                [type[0], type[1]] = [type[1], type[0]];
+          
                                 //console.log(`Depois: ${type}`)
                             }
                             
@@ -67,7 +66,7 @@ export default class Api  {
             }
         }
         url += `ts=1&apikey=${this.publicKey}&hash=${md5("1"+ this.privateKey + this.publicKey )}`;
-        console.log(url)
+        //console.log(url)
         return url;
     }
 
