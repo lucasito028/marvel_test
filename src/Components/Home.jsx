@@ -1,7 +1,8 @@
 import { useEffect, useState, useCallback } from "react";
-import { Api } from "../Services/Api";
 import { useNavigate } from "react-router-dom";
 import { Main, Filter, ContainerCard, Card, ChieldCard, H2} from "../assets/home";
+import { ServiceHome } from '../Services/ServiceHome';
+import { ServiceFilter } from '../Services/ServiceFilter';
 
 export default function Home({ searchParams }) {
   
@@ -15,16 +16,9 @@ export default function Home({ searchParams }) {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true); 
 
-  const cleanTitleParam = useCallback(() => {
-    if (titleParam) {
-      return titleParam.trim(); 
-    }
-    return '';
-  }, [titleParam]);
-
   const getCharacterId = useCallback(async () => {
     if (Boolean(characterName)) {
-      const queryInstance = new Api(['characters'], {
+      const queryInstance = new ServiceFilter(['characters'], {
         orderBy: 'name',
         nameStartsWith: characterName,
       });
@@ -43,18 +37,17 @@ export default function Home({ searchParams }) {
   const fetchComics = useCallback(async (currentPage) => {
     setIsLoading(true);
     const limit = 20; 
-    const queryInstance = new Api(['comics'], {
+    const queryInstance = new ServiceHome(['comics'], {
       format: "comic",
       formatType: "comic",
       noVariants: true,
       dateRange: dateParam,
-      title: titleParam || '',
-      //titleStartsWith: titleParam || '',
+      titleStartsWith: titleParam || '',
       characters: characterId,
       offset: (currentPage - 1) * limit,
       limit: limit
     });
-
+    console.log(queryInstance);
     try {
       const results = await queryInstance.select();
       setTotal(results.total);

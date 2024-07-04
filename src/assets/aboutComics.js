@@ -100,13 +100,17 @@ export const H5 = styled.h5`
 `;
 
 export const ImgComic = styled.div`
-  display: grid;
   place-items: center;
+  justify-content: center;
+  padding-top: 10px;
 
   @media (max-width: 767px) {
+    display: grid;
+    place-items: center;
     img {
-    width:340px;
-    height:auto;}
+      width:340px;
+      height:auto;
+    }
   }
 `;
 

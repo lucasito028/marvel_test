@@ -16,12 +16,7 @@ function App() {
   });
 
   const handleSearch = (params) => {
-    console.log(params)
     setSearch(params);
-  };
-
-  const handleSelectCharacter = (characterId) => {
-    setSearch({ ...search, characterName: characterId });
   };
 
   return (

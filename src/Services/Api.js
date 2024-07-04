@@ -1,14 +1,12 @@
 import md5 from "md5";
 
-export class Api  {
+export default class Api  {
 
     constructor(table = [], query = { id: null }) {
         this.table = table
         this.query = query;
-        this.publicKey = '94af0665e97e68ff6637fc1e6d1daf7e';
-        this.test = 'e053145fd0982715b5cdb1bb9e5fe0c2'
-        this.hash = '5d30905a04649c736f3cdf33c95b81db'
-        this.privateKey = 'a3b29e77d004afdc0c0d49f34173dbba30f288f1';
+        this.publicKey = '';
+        this.privateKey = '';
 
     }
 
@@ -67,10 +65,9 @@ export class Api  {
                     }
                 }
             }
-            //url += `ts=1&apikey=${this.publicKey}&hash=${this.hash}`;
         }
-        url += `ts=1&apikey=${this.test}&hash=${this.hash}`;
-        console.log(url)
+        url += `ts=1&apikey=${this.publicKey}&hash=${md5("1"+ this.privateKey + this.publicKey )}`;
+        //console.log(url)
         return url;
     }
 
@@ -86,7 +83,7 @@ export class Api  {
     
             const data = await response.json();
     
-            if (data && data.data && data.data.results) {
+            if (data && data.data && data.data.results && Boolean(data.data.results)) {
                 return data.data;
             } else {
                 throw new Error('Resposta da API da Marvel não está no formato esperado');

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HeaderBox, Container, TwoInput, DateInput, DivInput, ListOptions } from '../assets/header';
-import { Api } from '../Services/Api';
+import { ServiceFilter } from '../Services/ServiceFilter';
 
 export default function Header({ onSearch }) {
   const navigate = useNavigate();
@@ -11,8 +11,8 @@ export default function Header({ onSearch }) {
     new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().split('T')[0],
     new Date().toISOString().split('T')[0]
   ]);
+
   const [characterList, setCharacterList] = useState([]);
-  const [comicsList, setComicsList] = useState([]);
   const characterListRef = useRef(null);
   const comicsListRef = useRef(null);
   const [showDateInputs, setShowDateInputs] = useState(false);
@@ -38,7 +38,7 @@ export default function Header({ onSearch }) {
 
   const fetchCharacterNameResult = useCallback(async() => {
     if (characterName) {
-      const queryInstance = new Api(['characters'], {
+      const queryInstance = new ServiceFilter(['characters'], {
         orderBy: 'name',
         nameStartsWith: characterName,
       });
@@ -53,36 +53,15 @@ export default function Header({ onSearch }) {
     }
   }, [characterName]);
 
-  const fetchComicTitleResult = useCallback(async() => {
-    if (titleParam) {
-      const queryInstance = new Api(['comics'], {
-        titleStartsWith: titleParam,
-        format: "comic",
-        formatType: "comic",
-        noVariants: true,
-        dateRange: dateParam,
-        orderBy: 'title',
-      });
-      console.log(queryInstance);
-      queryInstance.select().then(results => {
-        setComicsList(results.results);
-      }).catch(error => {
-        console.error('Error fetching comics:', error);
-      });
-    } else {
-      setComicsList([]);
-    }
-  }, [titleParam, dateParam]);
-  
+  useEffect(() => {
+      const searchParams = { titleParam, dateParam, characterName };
+      onSearch(searchParams);
+      navigate('/');
+  }, [titleParam, characterName, dateParam]);
 
   useEffect(() => {
-    fetchCharacterNameResult();
-  }, [characterName, dateParam]);
-
-  useEffect(() => {
-    fetchComicTitleResult();
-  }, [titleParam]);
-
+    fetchCharacterNameResult()
+}, [characterName]);
 
   const handleChangeTitle = (e) => {
     setTitleParam(e.target.value);
@@ -98,28 +77,14 @@ export default function Header({ onSearch }) {
     setDateParam(newDateParam);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const searchParams = { titleParam, dateParam, characterName };
-    onSearch(searchParams);
-    navigate('/');
-  };
-
-  const uniqueTitles = [...new Set(comicsList.map(comic =>
-    comic.title
-      .replace(/[.#]/g, '') // Remove "#" e "."
-      .replace(/\s*\([^)]*\)/, '') // Remove texto entre parênteses
-      .replace(/\d+$/, '') // Remove números apenas do final
-  ))];
-
   const handleToggleDateInputs = () => {
     setShowDateInputs(!showDateInputs);
-    setShowCharacterInput(false); // Garante que apenas um dos inputs esteja visível por vez
+    setShowCharacterInput(false); 
   };
 
   const handleToggleCharacterInput = () => {
     setShowCharacterInput(!showCharacterInput);
-    setShowDateInputs(false); // Garante que apenas um dos inputs esteja visível por vez
+    setShowDateInputs(false); 
   };
 
   return (
@@ -137,7 +102,7 @@ export default function Header({ onSearch }) {
         </div>
 
         <div>
-          <form onSubmit={handleSubmit}>
+          <form>
             <DivInput>
               <input
                 type="text"
@@ -145,7 +110,7 @@ export default function Header({ onSearch }) {
                 value={titleParam}
                 onChange={handleChangeTitle}
               />
-              <button type="submit"> Search </button>
+
             </DivInput>
 
             <TwoInput>
@@ -192,6 +157,8 @@ export default function Header({ onSearch }) {
         </div>
       </Container>
 
+
+
       <Container>
       {characterList.length > 0 && (
           <ListOptions ref={characterListRef} className="visible">
@@ -206,8 +173,8 @@ export default function Header({ onSearch }) {
           </ListOptions>
         )}
 
-
-        {comicsList.length > 0 && (
+        {/*
+        comicsList.length > 0 && (
           <ListOptions ref={comicsListRef} className="visible">
             <h4>Series:</h4>
             <ul>
@@ -218,7 +185,7 @@ export default function Header({ onSearch }) {
               ))}
             </ul>
           </ListOptions>
-        )}
+        )*/}
       </Container>
     </HeaderBox>
   );

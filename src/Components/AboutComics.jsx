@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Api } from "../Services/Api";
+import { ServiceHome } from '../Services/ServiceHome';
+
 import {
   Main,
   HeaderMain,
@@ -17,6 +18,7 @@ import {
 } from "./../assets/aboutComics";
 
 export default function AboutComics() {
+  
   const navigate = useNavigate();
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +28,7 @@ export default function AboutComics() {
   useEffect(() => {
     const fetchComic = async () => {
       setIsLoading(true);
-      const queryInstance = new Api(["comics"], { id });
+      const queryInstance = new ServiceHome(["comics"], { id });
       try {
         const data = await queryInstance.select();
         if (data.results.length > 0) {
