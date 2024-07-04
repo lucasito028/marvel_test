@@ -1,6 +1,6 @@
 import Api from "./Api";
 
-export class ServiceHome extends Api{
+export class ServiceBody extends Api{
 
     constructor(table = [], query = { id: null }) {
         super(table, query);

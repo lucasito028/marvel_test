@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Main, Filter, ContainerCard, Card, ChieldCard, H2} from "../assets/home";
-import { ServiceHome } from '../Services/ServiceHome';
+import { ServiceBody } from '../Services/ServiceHome';
 import { ServiceFilter } from '../Services/ServiceFilter';
 
 export default function Home({ searchParams }) {
@@ -37,7 +37,7 @@ export default function Home({ searchParams }) {
   const fetchComics = useCallback(async (currentPage) => {
     setIsLoading(true);
     const limit = 20; 
-    const queryInstance = new ServiceHome(['comics'], {
+    const queryInstance = new ServiceBody(['comics'], {
       format: "comic",
       formatType: "comic",
       noVariants: true,
@@ -71,6 +71,7 @@ export default function Home({ searchParams }) {
     return date.toLocaleDateString("en-US", options);
   };
 
+  //Use Effect Camp
   useEffect(() => {
     getCharacterId();
   }, [characterName, getCharacterId]);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ServiceHome } from '../Services/ServiceHome';
+import { ServiceBody } from '../Services/ServiceHome';
 
 import {
   Main,
@@ -28,7 +28,7 @@ export default function AboutComics() {
   useEffect(() => {
     const fetchComic = async () => {
       setIsLoading(true);
-      const queryInstance = new ServiceHome(["comics"], { id });
+      const queryInstance = new ServiceBody(["comics"], { id });
       try {
         const data = await queryInstance.select();
         if (data.results.length > 0) {
