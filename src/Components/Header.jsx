@@ -1,6 +1,14 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { HeaderBox, Container, TwoInput, DateInput, DivInput, ListOptions } from '../assets/header';
+import { HeaderBox, 
+  Container, 
+  TwoInput, 
+  DivInput, 
+  ListOptions,
+  CalendarDateHabled,
+  CalendarDateDisabled,
+  SuperpowersHabled,
+  SuperpowersDisabled } from '../assets/header';
 import { ServiceFilter } from '../Services/ServiceFilter';
 
 export default function Header({ onSearch }) {
@@ -12,10 +20,10 @@ export default function Header({ onSearch }) {
     new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().split('T')[0],
     new Date().toISOString().split('T')[0]
   ]);
-
   const [characterList, setCharacterList] = useState([]);
   const characterListRef = useRef(null);
   const comicsListRef = useRef(null);
+
   const [showDateInputs, setShowDateInputs] = useState(false);
   const [showCharacterInput, setShowCharacterInput] = useState(false);
 
@@ -24,7 +32,6 @@ export default function Header({ onSearch }) {
       if (characterListRef.current && !characterListRef.current.contains(event.target)) {
         setCharacterList([]);
       }
-
       if (comicsListRef.current && !comicsListRef.current.contains(event.target)) {
         setComicsList([]);
       }
@@ -54,15 +61,6 @@ export default function Header({ onSearch }) {
     }
   }, [characterName]);
 
-  useEffect(() => {
-      const searchParams = { titleParam, dateParam, characterName };
-      onSearch(searchParams);
-      navigate('/');
-  }, [titleParam, characterName, dateParam]);
-
-  useEffect(() => {
-    fetchCharacterNameResult()
-}, [characterName]);
 
   const handleChangeTitle = (e) => {
     setTitleParam(e.target.value);
@@ -71,6 +69,7 @@ export default function Header({ onSearch }) {
   const handleChangeCharacter = (e) => {
     setCharacterName(e.target.value);
   };
+
 
   const handleChangeDate = (index, e) => {
     const newDateParam = [...dateParam];
@@ -81,12 +80,25 @@ export default function Header({ onSearch }) {
   const handleToggleDateInputs = () => {
     setShowDateInputs(!showDateInputs);
     setShowCharacterInput(false); 
+    setShowTypeOfComic(false)
   };
 
   const handleToggleCharacterInput = () => {
+    setShowDateInputs(false);
     setShowCharacterInput(!showCharacterInput);
-    setShowDateInputs(false); 
+    setShowTypeOfComic(false) 
   };
+
+
+  useEffect(() => {
+    const searchParams = { titleParam, dateParam, characterName };
+    onSearch(searchParams);
+    navigate('/');
+}, [titleParam, characterName, dateParam]);
+
+useEffect(() => {
+  fetchCharacterNameResult()
+}, [characterName]);
 
   return (
     <HeaderBox>
@@ -102,7 +114,7 @@ export default function Header({ onSearch }) {
           </span>
         </div>
 
-        <div>
+        <nav>
           <form>
             <DivInput>
               <input
@@ -116,10 +128,10 @@ export default function Header({ onSearch }) {
 
             <TwoInput>
               <button type="button" onClick={handleToggleDateInputs}>
-                {showDateInputs ?  'Date Activate'  :  'Date' }
+                {showDateInputs ? <CalendarDateHabled size="48"/> : <CalendarDateDisabled size="48"/>}
               </button>
               <button type="button" onClick={handleToggleCharacterInput}>
-                {showCharacterInput ? 'Character Activate' : 'Character'}
+                {showCharacterInput ? <SuperpowersHabled size="48"/> : <SuperpowersDisabled size="48"/>}
               </button>
             </TwoInput>
 
@@ -155,10 +167,8 @@ export default function Header({ onSearch }) {
               </TwoInput>
             )}
           </form>
-        </div>
+        </nav>
       </Container>
-
-
 
       <Container>
       {characterList.length > 0 && (
@@ -174,19 +184,6 @@ export default function Header({ onSearch }) {
           </ListOptions>
         )}
 
-        {/*
-        comicsList.length > 0 && (
-          <ListOptions ref={comicsListRef} className="visible">
-            <h4>Series:</h4>
-            <ul>
-              {uniqueTitles.map(title => (
-                <li key={title} onClick={() => setTitleParam(title)}>
-                  {title}
-                </li>
-              ))}
-            </ul>
-          </ListOptions>
-        )*/}
       </Container>
     </HeaderBox>
   );

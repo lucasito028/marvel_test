@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import {CalendarDate} from '@styled-icons/bootstrap/CalendarDate'
+import {Superpowers} from '@styled-icons/fa-brands/Superpowers'
 
 export const HeaderBox = styled.header`
   display: flex;
@@ -6,7 +8,8 @@ export const HeaderBox = styled.header`
   justify-content: center;
   align-items: center; 
 `;
-export const Container = styled.nav`
+
+export const Container = styled.div`
   padding-top: 12px;
 
   div{
@@ -47,8 +50,8 @@ export const Container = styled.nav`
 export const DivInput = styled.div`
   display: inline-block;
   width: 360px;
-
 `;
+
 export const TwoInput = styled.div`
   flex-direction: row;
   align-items: center;
@@ -63,8 +66,6 @@ export const TwoInput = styled.div`
     margin: 5px;
   }
 
-`;
-export const DateInput = styled.div`
 `;
 
 export const ListOptions = styled.div`
@@ -105,3 +106,27 @@ export const ListOptions = styled.div`
     }
   }
 `;
+
+export const CalendarDateHabled = styled(CalendarDate)`
+color: white;
+`
+  
+export const CalendarDateDisabled = styled(CalendarDate)`
+color: #7C7C7C;
+
+&:hover {
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+`
+
+export const SuperpowersHabled = styled(Superpowers)`
+color: white;
+`
+export const SuperpowersDisabled = styled(Superpowers)`
+color: #7C7C7C;
+&:hover {
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+`

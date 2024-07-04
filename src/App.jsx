@@ -12,7 +12,7 @@ function App() {
       new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().split('T')[0],
       new Date().toISOString().split('T')[0]
     ],
-    characterName: ''
+    characterName: '',
   });
 
   const handleSearch = (params) => {

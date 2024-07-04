@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const Main = styled.main `
   padding: 15px;
+  padding-top: 0;
   display: block;
   justify-content: center;
   align-items: center;

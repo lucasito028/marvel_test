@@ -35,10 +35,11 @@ export default function Home({ searchParams }) {
   }, [characterName]);
 
   const fetchComics = useCallback(async (currentPage) => {
+    
     setIsLoading(true);
     const limit = 20; 
     const queryInstance = new ServiceBody(['comics'], {
-      format: "comic",
+
       formatType: "comic",
       noVariants: true,
       dateRange: dateParam,
@@ -47,7 +48,7 @@ export default function Home({ searchParams }) {
       offset: (currentPage - 1) * limit,
       limit: limit
     });
-    console.log(queryInstance);
+
     try {
       const results = await queryInstance.select();
       setTotal(results.total);

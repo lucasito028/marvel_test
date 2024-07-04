@@ -67,7 +67,7 @@ export default class Api  {
             }
         }
         url += `ts=1&apikey=${this.publicKey}&hash=${md5("1"+ this.privateKey + this.publicKey )}`;
-        //console.log(url)
+        console.log(url)
         return url;
     }
 
