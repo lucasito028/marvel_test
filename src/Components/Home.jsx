@@ -39,7 +39,7 @@ export default function Home({ searchParams }) {
     setIsLoading(true);
     const limit = 20; 
     const queryInstance = new ServiceBody(['comics'], {
-
+      format: "comic",
       formatType: "comic",
       noVariants: true,
       dateRange: dateParam,
