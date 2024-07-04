@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HeaderBox, Container, TwoInput, DateInput, DivInput, ListOptions } from '../assets/header';
 import { Api } from '../Services/Api';
-import { Search } from '@styled-icons/boxicons-regular/Search'
 
 export default function Header({ onSearch }) {
   const navigate = useNavigate();
@@ -43,6 +42,7 @@ export default function Header({ onSearch }) {
         orderBy: 'name',
         nameStartsWith: characterName,
       });
+      console.log(queryInstance);
       queryInstance.select().then(results => {
         setCharacterList(results.results);
       }).catch(error => {
@@ -63,6 +63,7 @@ export default function Header({ onSearch }) {
         dateRange: dateParam,
         orderBy: 'title',
       });
+      console.log(queryInstance);
       queryInstance.select().then(results => {
         setComicsList(results.results);
       }).catch(error => {
@@ -149,10 +150,10 @@ export default function Header({ onSearch }) {
 
             <TwoInput>
               <button type="button" onClick={handleToggleDateInputs}>
-                {showDateInputs ?  'Carne'  :  'Ativado' }
+                {showDateInputs ?  'Date Activate'  :  'Date' }
               </button>
               <button type="button" onClick={handleToggleCharacterInput}>
-                {showCharacterInput ? 'Picanha' : 'Ativado'}
+                {showCharacterInput ? 'Character Activate' : 'Character'}
               </button>
             </TwoInput>
 
@@ -204,6 +205,7 @@ export default function Header({ onSearch }) {
             </ul>
           </ListOptions>
         )}
+
 
         {comicsList.length > 0 && (
           <ListOptions ref={comicsListRef} className="visible">

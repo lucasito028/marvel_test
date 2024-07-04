@@ -1,38 +1,4 @@
 import styled from "styled-components";
-/*
-export const HeaderBackground = styled.header`
-  background-color: rgb(32, 32, 32);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-export const Container = styled.div`
-width: 400px;
-display: block;
-div {
-display: flex;
-justify-content: center;
-align-items: center;
-}
-`;
-
-export const InputMain = styled.div`
-width: 400px;
-display: block;
-div {
-display: flex;
-justify-content: center;
-align-items: center;
-}
-input {
-height: 28px;
-}
-button {
-height: 30px;
-}
-`;
-*/
 
 export const HeaderBox = styled.header`
   display: flex;
@@ -41,6 +7,7 @@ export const HeaderBox = styled.header`
   align-items: center; 
 `;
 export const Container = styled.nav`
+  padding-top: 12px;
   div{
     display: flex;
     justify-content: center;
@@ -91,23 +58,26 @@ export const TwoInput = styled.div`
 `;
 export const DateInput = styled.div`
 `;
-export const CharacterText = styled.div`
-`;
 
 export const ListOptions = styled.div`
-  position: absolute;
-  top: 23%; /* Posiciona abaixo dos outros elementos */
   left: 0;
   width: 100%;
-  background-color: #151515;
+  background-color: #303030;
   z-index: 1000; /* Garante que ficará na frente de outros itens */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: none; /* Inicialmente oculto */
+
+  @media (max-width: 767px) {
+    top: 23%;
+  }
 
   &.visible {
     display: block; /* Mostra quando visível */
   }
 
+  div{
+    margin: 10px;
+  }
   ul {
     list-style-type: none;
     padding: 0;

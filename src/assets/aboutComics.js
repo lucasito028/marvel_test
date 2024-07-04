@@ -7,13 +7,19 @@ export const Main = styled.main`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-shadow: 0 0 1px rgba(255, 255, 255, 0.8);
   height: 90%
+  padding: 15px;
 
 `;
 
 export const HeaderMain = styled.div`
-width: 100%;
+margin-bottom: 10px;
+width: 82%;
 color: #fff;
-padding-left: 100px;
+margin-bottom: 10px;
+@media (max-width: 767px) {
+  width: 80%;
+}
+
 
 button {
     background-color: #151515;
@@ -123,6 +129,7 @@ export const ContainerInformation = styled.div`
     max-width: 400px;
     display: block;
     padding: 0;
+    padding-right: 0px;
   }
 `;
 

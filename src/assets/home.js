@@ -54,7 +54,8 @@ export const Card = styled.div `
 `;
 export const H2 = styled.h2 `
 font-weight: bold;
-font-size: 18px;`
+font-size: 18px;
+`
 
 export const ChieldCard = styled.div `
   margin: auto;
