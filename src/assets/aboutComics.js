@@ -22,32 +22,37 @@ export const HeaderMain = styled.div`
 
   button {
       background-color: #151515;
-      border: 1px solid rgba(255, 255, 255, 0.6); /* Borda mais fina e leve */
+      border: 1px solid rgba(255, 255, 255, 0.6);
       padding: 7px;
       font-family: "Sen", sans-serif;
       font-size: 16px;
       color: white;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       text-shadow: 0 0 1px rgba(255, 255, 255, 0.8);
-      transition: box-shadow 0.3s ease; /* Transição suave para o efeito de foco */
+      transition: box-shadow 0.3s ease; 
     }
 
   button:hover, input:focus {
-      box-shadow: 0 0 8px rgba(255, 255, 255, 0.8); /* Efeito de brilho ao focar ou passar o mouse */
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.8); 
 `;
 export const ImgComic = styled.div`
   place-items: center;
   justify-content: center;
   padding-top: 10px;
   height: 600px
-  width: auto
+  width: auto;
+
+  img {
+      width:340px;
+      height:auto;
+    }
 
   @media (max-width: 767px) {
     display: grid;
     place-items: center;
 
     img {
-      width:340px;
+      width:280px;
       height:auto;
     }
 

@@ -8,7 +8,8 @@ import { HeaderBox,
   CalendarDateHabled,
   CalendarDateDisabled,
   SuperpowersHabled,
-  SuperpowersDisabled } from '../assets/header';
+  SuperpowersDisabled,
+  SearchIcon } from '../assets/header';
 import { ServiceFilter } from '../Services/ServiceFilter';
 
 export default function Header({ onSearch }) {
@@ -76,7 +77,6 @@ export default function Header({ onSearch }) {
     setDateParam(newDateParam);
   };
 
-
   const handleToggleDateInputs = () => {
     setShowDateInputs(!showDateInputs);
     setShowCharacterInput(false); 
@@ -87,12 +87,12 @@ export default function Header({ onSearch }) {
     setShowCharacterInput(!showCharacterInput); 
   };
 
-
-  useEffect(() => {
+  const SearchData = (e) => {
+    e.preventDefault()
     const searchParams = { titleParam, dateParam, characterName };
     onSearch(searchParams);
     navigate('/');
-}, [titleParam, characterName, dateParam]);
+  }
 
 useEffect(() => {
   fetchCharacterNameResult()
@@ -122,6 +122,7 @@ useEffect(() => {
                 value={titleParam}
                 onChange={handleChangeTitle}
               />
+              <button type="submit" onClick={(e) => SearchData(e)}><SearchIcon size="17"/></button>
             </DivInput>
 
             <TwoInput>
@@ -132,6 +133,17 @@ useEffect(() => {
                 {showCharacterInput ? <SuperpowersHabled size="48"/> : <SuperpowersDisabled size="48"/>}
               </button>
             </TwoInput>
+
+            {!showDateInputs && !showCharacterInput && (
+              <>
+                <div>
+                  {dateParam ? `Date Between: (${dateParam[0]}) - (${dateParam[1]})` : ''}
+                </div>
+                <div>
+                  {characterName ? `Character Name: ${characterName}` : ''}
+                </div>
+              </>
+            )}
 
             {showDateInputs && (
               <TwoInput>

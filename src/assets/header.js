@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import {CalendarDate} from '@styled-icons/bootstrap/CalendarDate'
 import {Superpowers} from '@styled-icons/fa-brands/Superpowers'
+import { Search } from '@styled-icons/bootstrap/Search'
 
 export const HeaderBox = styled.header`
   display: flex;
@@ -52,7 +53,7 @@ export const DivInput = styled.div`
 export const TwoInput = styled.div`
   flex-direction: row;
   align-items: center;
-  color: black;
+  color: white;
   
   div {
     flex-direction: column;
@@ -62,7 +63,6 @@ export const TwoInput = styled.div`
   input, button {
     margin: 5px;
   }
-
 `;
 export const ListOptions = styled.div`
   left: 0;
@@ -109,8 +109,8 @@ export const CalendarDateDisabled = styled(CalendarDate)`
   color: #7C7C7C;
 
   &:hover {
-      color: white;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
 `;
 export const SuperpowersHabled = styled(Superpowers)`
@@ -119,7 +119,18 @@ color: white;
 export const SuperpowersDisabled = styled(Superpowers)`
 color: #7C7C7C;
 &:hover {
-    color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+`
+export const SearchIcon = styled(Search)`
+color: #7C7C7C;
+&:hover {
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+&:active {
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 `
