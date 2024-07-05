@@ -35,7 +35,7 @@ export default function Header({ onSearch }) {
 
     const queryInstance = new ServiceFilter(['characters'], {
       orderBy: 'name',
-      nameStartsWith: characterName,
+      nameStartsWith: characterName.trimEnd().toLowerCase(),
     });
 
     queryInstance.select().then(results => {

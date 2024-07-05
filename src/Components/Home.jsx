@@ -28,7 +28,7 @@ export default function Home({ searchParams }) {
     if (Boolean(characterName)) {
       const queryInstance = new ServiceFilter(['characters'], {
         orderBy: 'name',
-        nameStartsWith: characterName.trimEnd(),
+        nameStartsWith: characterName.trimEnd().toLowerCase(),
       });
       try {
         const results = await queryInstance.select();
@@ -52,7 +52,7 @@ export default function Home({ searchParams }) {
       formatType: "comic",
       noVariants: true,
       dateRange: dateParam,
-      titleStartsWith: titleParam.trimEnd() || '',
+      titleStartsWith: titleParam.trimEnd().toLowerCase() || '',
       characters: characterId,
       offset: (currentPage - 1) * limit,
       limit: limit
