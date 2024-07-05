@@ -15,7 +15,6 @@ export default function Home({ searchParams }) {
   
   const navigate = useNavigate();
   const { titleParam, dateParam, characterName} = searchParams;
-  const [actualDate, setSelectedDate] = useState(dateParam);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [comics, setComics] = useState([]);
@@ -64,6 +63,7 @@ export default function Home({ searchParams }) {
       setTotal(results.total);
         if (currentPage === 1) {
           setComics(results.results);
+          console.log(queryInstance)
         } else {
           setComics((prevComics) => [...prevComics, ...results.results]);
         }

@@ -30,40 +30,20 @@ export default function Header({ onSearch }) {
   const [showDateInputs, setShowDateInputs] = useState(false);
   const [showCharacterInput, setShowCharacterInput] = useState(false);
 
-  const fetchCharacterNameResult = useCallback(async() => {
+  const selectCharacterName = async(e) => {
+    e.preventDefault()
 
-    if(characterName){
-      
-      const lowercasedCharacter = characterName.toLowerCase();
-      console.log(lowercasedCharacter);
-  
-      const filteredList = characterList.filter(character =>
-        character.name.toLowerCase().startsWith(lowercasedCharacter) 
-        ||
-        character.name.toLowerCase().includes(lowercasedCharacter)
-      );
-  
-      console.log(filteredList)
-      
-      if (filteredList.length === 0) {
-        const queryInstance = new ServiceFilter(['characters'], {
-          orderBy: 'name',
-          nameStartsWith: characterName.trimEnd(),
-        });
-  
-        queryInstance.select().then(results => {
-          setCharacterList(results.results);
-        }).catch(error => {
-          console.error('Error fetching characters:', error);
-        });
-      } else {
-        setCharacterList([]);
-      }
-  
-    }
+    const queryInstance = new ServiceFilter(['characters'], {
+      orderBy: 'name',
+      nameStartsWith: characterName,
+    });
 
-  }, [characterName, characterList]);
-
+    queryInstance.select().then(results => {
+      setCharacterList(results.results);
+    }).catch(error => {
+      console.error('Error fetching characters:', error);
+    });
+  } 
 
   const handleChangeTitle = (e) => {
     setTitleParam(e.target.value);
@@ -95,10 +75,6 @@ export default function Header({ onSearch }) {
     onSearch(searchParams);
     navigate('/');
   }
-
-useEffect(() => {
-  fetchCharacterNameResult();
-}, [characterName,]);
 
 useEffect(() => {
   const handleClickOutside = (event) => {
@@ -184,14 +160,16 @@ useEffect(() => {
 
             {showCharacterInput && (
               <TwoInput>
-                <div>
                   <input
                     type="text"
                     placeholder="Character Name"
                     value={characterName}
                     onChange={handleChangeCharacter}
+                    style={{ margin: '0' }}
                   />
-                </div>
+                  <button type="button" style={{ margin: '0' }} onClick={(e) =>  selectCharacterName(e)}>
+                    <SearchIcon size="16"/>
+                    </button>
               </TwoInput>
             )}
 
