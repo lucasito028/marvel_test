@@ -15,6 +15,7 @@ export default function Home({ searchParams }) {
   
   const navigate = useNavigate();
   const { titleParam, dateParam, characterName} = searchParams;
+  const [actualDate, setSelectedDate] = useState(dateParam);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [comics, setComics] = useState([]);
@@ -28,7 +29,7 @@ export default function Home({ searchParams }) {
     if (Boolean(characterName)) {
       const queryInstance = new ServiceFilter(['characters'], {
         orderBy: 'name',
-        nameStartsWith: characterName,
+        nameStartsWith: characterName.trimEnd(),
       });
       try {
         const results = await queryInstance.select();
@@ -45,14 +46,14 @@ export default function Home({ searchParams }) {
   const fetchComics = useCallback(async (currentPage) => {
     
     setIsLoading(true);
-    const limit = 20; 
+    const limit = 60; 
 
     const queryInstance = new ServiceBody(['comics'], {
       format: "comic",
       formatType: "comic",
       noVariants: true,
       dateRange: dateParam,
-      titleStartsWith: titleParam || '',
+      titleStartsWith: titleParam.trimEnd() || '',
       characters: characterId,
       offset: (currentPage - 1) * limit,
       limit: limit
@@ -77,24 +78,13 @@ export default function Home({ searchParams }) {
     }
   }, [characterId, dateParam, titleParam]);
 
+
   const toConvertData = (date) => {
     date = new Date(date);
     const options = { year: "numeric", month: "long", day: "numeric" };
     return date.toLocaleDateString("en-US", options);
   };
 
-
-  useEffect(() => {
-    getCharacterId();
-  }, [characterName, getCharacterId]);
-
-  useEffect(() => {
-    if (characterId !== undefined) {
-      setPage(1); 
-      setComics([]); 
-      fetchComics(1); 
-    }
-  }, [characterId, dateParam, titleParam, fetchComics]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -113,10 +103,22 @@ export default function Home({ searchParams }) {
   }, [isLoading, hasMore]);
 
   useEffect(() => {
+    getCharacterId();
+  }, [characterName, getCharacterId]);
+
+  useEffect(() => {
     if (page > 1) {
       fetchComics(page);
     }
   }, [page, fetchComics]);
+
+  useEffect(() => {
+    if (characterId !== undefined) {
+      setPage(1); 
+      setComics([]); 
+      fetchComics(1); 
+    }
+  }, [characterId, dateParam, titleParam, fetchComics]);
 
   const handleComic = (id) => {
     navigate(`/comics/${id}`);

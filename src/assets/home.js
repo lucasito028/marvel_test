@@ -8,13 +8,13 @@ export const Main = styled.main `
   align-items: center;
 `;
 export const Filter = styled.div `
-      display: grid;
-      place-items: center; 
-      padding-left: 0;
+  display: grid;
+  place-items: center; 
+  padding-left: 0;
 
-      div {
-        margin: 10px;
-      }
+  div {
+    margin: 10px;
+  }
 }
 `;
 export const ContainerCard = styled.div `

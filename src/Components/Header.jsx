@@ -17,50 +17,52 @@ export default function Header({ onSearch }) {
   const navigate = useNavigate();
   const [titleParam, setTitleParam] = useState('');
   const [characterName, setCharacterName] = useState('');
+
   const [dateParam, setDateParam] = useState([
     new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().split('T')[0],
     new Date().toISOString().split('T')[0]
   ]);
   const [characterList, setCharacterList] = useState([]);
+
   const characterListRef = useRef(null);
   const comicsListRef = useRef(null);
 
   const [showDateInputs, setShowDateInputs] = useState(false);
   const [showCharacterInput, setShowCharacterInput] = useState(false);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (characterListRef.current && !characterListRef.current.contains(event.target)) {
+  const fetchCharacterNameResult = useCallback(async() => {
+
+    if(characterName){
+      
+      const lowercasedCharacter = characterName.toLowerCase();
+      console.log(lowercasedCharacter);
+  
+      const filteredList = characterList.filter(character =>
+        character.name.toLowerCase().startsWith(lowercasedCharacter) 
+        ||
+        character.name.toLowerCase().includes(lowercasedCharacter)
+      );
+  
+      console.log(filteredList)
+      
+      if (filteredList.length === 0) {
+        const queryInstance = new ServiceFilter(['characters'], {
+          orderBy: 'name',
+          nameStartsWith: characterName.trimEnd(),
+        });
+  
+        queryInstance.select().then(results => {
+          setCharacterList(results.results);
+        }).catch(error => {
+          console.error('Error fetching characters:', error);
+        });
+      } else {
         setCharacterList([]);
       }
-      if (comicsListRef.current && !comicsListRef.current.contains(event.target)) {
-        setComicsList([]);
-      }
-    };
-
-    document.addEventListener('click', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, []);
-
-  const fetchCharacterNameResult = useCallback(async() => {
-    if (characterName) {
-      const queryInstance = new ServiceFilter(['characters'], {
-        orderBy: 'name',
-        nameStartsWith: characterName,
-      });
-      console.log(queryInstance);
-      queryInstance.select().then(results => {
-        setCharacterList(results.results);
-      }).catch(error => {
-        console.error('Error fetching characters:', error);
-      });
-    } else {
-      setCharacterList([]);
+  
     }
-  }, [characterName]);
+
+  }, [characterName, characterList]);
 
 
   const handleChangeTitle = (e) => {
@@ -95,9 +97,25 @@ export default function Header({ onSearch }) {
   }
 
 useEffect(() => {
-  fetchCharacterNameResult()
-}, [characterName]);
+  fetchCharacterNameResult();
+}, [characterName,]);
 
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (characterListRef.current && !characterListRef.current.contains(event.target)) {
+      setCharacterList([]);
+    }
+    if (comicsListRef.current && !comicsListRef.current.contains(event.target)) {
+      setComicsList([]);
+    }
+  };
+
+  document.addEventListener('click', handleClickOutside);
+
+  return () => {
+    document.removeEventListener('click', handleClickOutside);
+  };
+}, []);
 
   return (
     <HeaderBox>
@@ -195,7 +213,6 @@ useEffect(() => {
             </ListOptions>
           )}
       </Container>
-      
     </HeaderBox>
   );
 }

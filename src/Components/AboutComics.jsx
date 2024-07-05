@@ -26,6 +26,7 @@ export default function AboutComics() {
   const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
+    
     const fetchComic = async () => {
 
       setIsLoading(true);
